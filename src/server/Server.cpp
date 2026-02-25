@@ -169,7 +169,6 @@ void Server::sendWelcome(Client* client)
     {
         if (errno == EAGAIN || errno == EWOULDBLOCK)
         {
-            // optional: buffer for later
         }
         else
         {
