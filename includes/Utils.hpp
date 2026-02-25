@@ -1,0 +1,2 @@
+
+//int CheckArgs(char** argv);
