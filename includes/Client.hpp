@@ -5,4 +5,11 @@ public:
 	Client();
 	Client(int fd);
 	~Client();
+
+	void disconnect();
+
+	/**
+	* 
+	*/
+	bool handleMsg();
 };
