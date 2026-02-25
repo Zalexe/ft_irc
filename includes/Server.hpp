@@ -12,6 +12,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <cerrno>
+#include <vector>
 
 #include "Channel.hpp"
 #include "Client.hpp"
