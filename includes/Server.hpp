@@ -33,7 +33,7 @@ class Server{
         void run();
         void acceptClient();
         void handleClient(int fd);
-        void sendWelcome();
+        void sendWelcome(Client* client);
         void disconnectClient(int fd);
         void processCommand(Client* client, std::string line);
         Client* getClientByFd(int fd);
