@@ -113,7 +113,7 @@ void Server::acceptClient()
     epoll_ctl(_epollSocket, EPOLL_CTL_ADD, client_fd, &ev);
 
     // Create Client object
-    Client* newClient = new Client(client_fd);
+    Client* newClient = new Client(client_fd, client_addr);
     _clients.push_back(newClient);
 }
 

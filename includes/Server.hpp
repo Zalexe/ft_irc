@@ -1,3 +1,4 @@
+#pragma once
 
 #include <sys/epoll.h>
 #include <sys/socket.h>
@@ -17,6 +18,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 
+#define SERVER_NAME "ft_irc"
 
 class Server{
     private:
@@ -38,4 +40,4 @@ class Server{
         void processCommand(Client* client, std::string line);
         Client* getClientByFd(int fd);
         
-}
+};
