@@ -29,4 +29,18 @@ public:
 	void disconnect();
 	void disconnect(const char* reason);
 	std::string toString() const;
+
+
+
+	bool isAuthorized() const;
+	void setAuthorized(bool);
+
+	bool isRegistered() const;
+	void setRegistered(bool);
+
+	void setNick(const std::string&);
+	void setUser(const std::string&);
+
+	std::string getNick() const;
+	std::string getUser() const;
 };

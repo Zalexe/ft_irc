@@ -176,10 +176,77 @@ void Server::sendWelcome(Client* client)
         }
     }
 }
+std::string Server::extractCommand(const std::string& line)
+{
+    std::stringstream ss(line);
+    std::string cmd;
+    ss >> cmd;
 
+    // remove trailing \r if exists
+    if (!cmd.empty() && cmd[cmd.size() - 1] == '\r')
+        cmd.erase(cmd.size() - 1);
+
+    return cmd;
+}
 void Server::processCommand(Client* client, std::string line)
 {
-    
+   if (line.empty())
+        return;
+
+    std::string command = extractCommand(line);
+
+    if (!client->isRegistered())
+        handleRegistration(client, command, line);
+    else
+        executeCommand(client, command, line);
+}
+void Server::handleRegistration(Client* client,
+                                const std::string& command,
+                                const std::string& line)
+{
+    std::stringstream ss(line);
+    std::string cmd;
+    ss >> cmd;
+
+    if (cmd == "PASS")
+        handlePass(client, ss);
+    else if (cmd == "NICK")
+        handleNick(client, ss);
+    else if (cmd == "USER")
+        handleUser(client, ss);
+    else
+        return; // Ignore everything else until registered
+
+    // Check if registration complete
+    if (client->isAuthorized() &&
+        !client->getNick().empty() &&
+        !client->getUser().empty())
+    {
+        client->setRegistered(true);
+        sendWelcome(client);
+    }
+}
+
+void Server::executeCommand(Client* client,
+                            const std::string& command,
+                            const std::string& line)
+{
+    if (command == "JOIN")
+        handleJoin(client, line);
+    else if (command == "PRIVMSG")
+        handlePrivmsg(client, line);
+    else if (command == "QUIT")
+        disconnectClient(client->getFd());
+    else if (command == "KICK")
+        handleKick(client, line);
+    else if (command == "INVITE")
+        handleInvite(client, line);
+    else if (command == "TOPIC")
+        handleTopic(client, line);
+    else if (command == "MODE")
+        handleMode(client, line);
+    else
+        sendError(client, "421", ":Unknown command");
 }
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------

@@ -8,10 +8,12 @@
 
 class Channel {
 private:
-	std::string name;
-	std::string topic;
-	std::string password;
+    std::string _name;
+    std::string _topic;
+    std::string _key;
+
 	const std::vector<Client*> clientList;
+	
 	uint16_t maxUsers;
 	bool outsideMessages;
 	bool moderated;
@@ -24,5 +26,16 @@ public:
 	Channel(const std::string& name, const std::string& topic, const std::string& passwd);
 	~Channel();
 
-	
+	// membership
+    void addMember(Client*);
+    void removeMember(Client*);
+    bool isMember(Client*) const;
+
+    // operators
+    void addOperator(Client*);
+    void removeOperator(Client*);
+    bool isOperator(Client*) const;
+
+    // broadcast
+    void broadcast(const std::string& msg, Client* exclude = NULL);
 };

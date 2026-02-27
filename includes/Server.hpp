@@ -37,7 +37,11 @@ class Server{
         void handleClient(int fd);
         void sendWelcome(Client* client);
         void disconnectClient(int fd);
+
+        std::string extractCommand(const std::string& line);
         void processCommand(Client* client, std::string line);
+        void handleRegistration(Client* client, const std::string& command, const std::string& line);
+        void executeCommand(Client* client, const std::string& command, const std::string& line);
         Client* getClientByFd(int fd);
         
 };

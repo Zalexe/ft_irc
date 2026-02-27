@@ -22,6 +22,18 @@ void Client::disconnect() {
 
 void Client::disconnect(const char* reason) {
 	// TODO
+	    if (!this->alive)
+        return;
+
+    std::string message = "ERROR :";
+    message += reason;
+    message += "\r\n";
+
+    send(this->fd, message.c_str(), message.size(), 0);
+
+    close(this->fd);
+    this->alive = false;
+    this->fd = -1;
 }
 
 std::string Client::toString() const {
