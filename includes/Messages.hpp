@@ -3,15 +3,21 @@
 // Registration
 #include "Client.hpp"
 #define WELCOME "001"
-#define YOUR_HOST "002" // ?
-#define SERVER_CREATED "003" // ?
-#define SERVER_VERSION "004" // ?
+#define YOUR_HOST "002"
+#define SERVER_CREATED "003"
+#define SERVER_VERSION "004"
 
 // Errors
 #define NO_SUCH_NICKNAME "401"
 #define NO_SUCH_CHANNEL "403"
 #define NICKNAME_IN_USE "433"
 #define NOT_REGISTERED "451"
+
+// Whois
+#define WHOISUSER "311"
+#define WHOISSERVER "312"
+#define WHOISOPERATOR "313"
+#define ENDOFWHOIS "318"
 
 // Channel info
 #define NO_TOPIC "331"
@@ -38,5 +44,5 @@ std::string buildResponseYourhost(const Client* target);
 std::string buildResponseCreationDate(const Client* target);
 std::string buildResponseMyInfo(const Client* target);
 
-
-
+// Info
+std::string buildResponseWhoisuser(const char* targetNick, const Client* user);

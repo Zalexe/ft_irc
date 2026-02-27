@@ -1,4 +1,8 @@
 #include "Client.hpp"
+#include "Messages.hpp"
+#include "Server.hpp"
+#include <cstring>
+#include <sys/socket.h>
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
@@ -23,19 +27,7 @@ bool Client::isAlive() const { return this->_alive; }
 ** --------------------------------- METHODS ----------------------------------
 */
 bool Client::match(const std::string& input) const {
-    // Construct full string: nick!user@host
-	/**
-	* nickname ≤ 64
-	* username ≤ 64
-	* host ≤ 128
-	**/
-    char clientStr[64 + 64 + 1 + 128 + 1]; // nick + ! + user + @ + host + '\0'
-    std::snprintf(clientStr, sizeof(clientStr), "%s!%s@%s",
-                  this->nickname.c_str(),
-                  this->name.c_str(),
-                  inet_ntoa(this->_host.sin_addr));
-
-    return wildcard_match(clientStr, input.c_str());
+    return wildcard_match(this->toString().c_str(), input.c_str());
 }
 
 void Client::disconnect() {
@@ -43,15 +35,21 @@ void Client::disconnect() {
 }
 
 void Client::disconnect(const char* reason) {
-	// TODO
 	if (!this->_alive)
         return;
+	std::string res = buildQuitMessage(SERVER_NAME, nickname.c_str(), reason);
+	send(_fd, res.c_str(), res.size(), 0);
 	close(_fd);
     _alive = false;
     _fd = -1;
 }
 
 std::string Client::toString() const {
+	/**
+	* nickname ≤ 64
+	* username ≤ 64
+	* host ≤ 128
+	**/
 	std::stringstream stream;
 
 	stream << this->nickname

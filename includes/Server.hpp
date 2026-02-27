@@ -22,6 +22,8 @@
 #define SERVER_VERSION "1.0"
 #define SERVER_DESCRIPTION "IRC Server for 42 by cmarrued & intherna"
 
+#define WELCOME_MESSAGE "Welcome to ft_irc server, " // Host to be appended to the end
+
 /* TODO:
 * Because of IRC's Scandinavian origin, the characters {}|^ are
 * considered to be the lower case equivalents of the characters []\~,

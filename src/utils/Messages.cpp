@@ -56,3 +56,26 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 		throw std::runtime_error("The message is too large (> 512)");
 	return str;
 }
+
+// Registration (these 4 messages are sent)
+std::string buildResponseWelcome(const Client* target) {
+	std::string welcome(WELCOME_MESSAGE);
+	welcome.append(target->toString());
+
+	return buildResponseCodeMessage(2, WELCOME, target->nickname.c_str(), welcome.c_str());
+}
+
+std::string buildResponseYourhost(const Client* target) {
+
+}
+
+std::string buildResponseCreationDate(const Client* target) {
+
+}
+
+std::string buildResponseMyInfo(const Client* target) {
+
+}
+
+// Info
+std::string buildResponseWhoisuser(const char* targetNick, const Client* user);
