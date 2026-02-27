@@ -6,13 +6,16 @@
 #include <netinet/in.h>
 #include <sstream>
 #include <unistd.h>
+#include "Utils.hpp"
 
 class Client {
 private:
 	int _fd;
 	struct sockaddr_in _host;
+	std::string _buffer;
 	bool _alive;
-
+	bool _authorized;
+	bool _registered;
 public:
 	std::string nickname;
 	std::string name;
@@ -47,4 +50,8 @@ public:
 
 	std::string getNick() const;
 	std::string getUser() const;
+
+	void appendBuffer(const std::string& data);
+	bool hasFullLine() const;
+	std::string extractLine()
 };

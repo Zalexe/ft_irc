@@ -3,7 +3,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 Client::Client() : _fd(-1), _alive(false) {}
-Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true) {}
+Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true), _authorized(false), _registered(false) {}
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
@@ -23,7 +23,19 @@ bool Client::isAlive() const { return this->_alive; }
 ** --------------------------------- METHODS ----------------------------------
 */
 bool Client::match(const std::string& input) const {
+    // Construct full string: nick!user@host
+	/**
+	* nickname ≤ 64
+	* username ≤ 64
+	* host ≤ 128
+	**/
+    char clientStr[64 + 64 + 1 + 128 + 1]; // nick + ! + user + @ + host + '\0'
+    std::snprintf(clientStr, sizeof(clientStr), "%s!%s@%s",
+                  this->nickname.c_str(),
+                  this->name.c_str(),
+                  inet_ntoa(this->_host.sin_addr));
 
+    return wildcard_match(clientStr, input.c_str());
 }
 
 void Client::disconnect() {
@@ -34,16 +46,9 @@ void Client::disconnect(const char* reason) {
 	// TODO
 	if (!this->_alive)
         return;
-
-    std::string message = "ERROR :";
-    message += reason;
-    message += "\r\n";
-
-    send(this->_fd, message.c_str(), message.size(), 0);
-
-    close(this->_fd);
-    this->_alive = false;
-    this->_fd = -1;
+	close(_fd);
+    _alive = false;
+    _fd = -1;
 }
 
 std::string Client::toString() const {
@@ -55,5 +60,20 @@ std::string Client::toString() const {
 		<< '@'
 		<< inet_ntoa(this->_host.sin_addr);
 	return stream.str();
+}
+
+void Client::appendBuffer(const std::string& data) {
+	_buffer += data;
+}
+bool Client::hasFullLine() const {
+	return _buffer.find("\r\n") != std::string::npos;
+}
+std::string Client::extractLine() {
+	size_t pos = _buffer.find("\r\n");
+	if (pos == std::string::npos)
+		return "";
+	std::string line = _buffer.substr(0, pos);
+	_buffer.erase(0, pos + 2);
+	return line;
 }
 /* ************************************************************************** */
