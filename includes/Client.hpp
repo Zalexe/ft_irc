@@ -53,5 +53,5 @@ public:
 
 	void appendBuffer(const std::string& data);
 	bool hasFullLine() const;
-	std::string extractLine()
+	std::string extractLine();
 };

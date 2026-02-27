@@ -19,6 +19,15 @@
 #include "Client.hpp"
 
 #define SERVER_NAME "ft_irc"
+#define SERVER_VERSION "1.0"
+#define SERVER_DESCRIPTION "IRC Server for 42 by cmarrued & intherna"
+
+/* TODO:
+* Because of IRC's Scandinavian origin, the characters {}|^ are
+* considered to be the lower case equivalents of the characters []\~,
+* respectively. This is a critical issue when determining the
+* equivalence of two nicknames or channel names.
+*/
 
 class Server{
     private:
