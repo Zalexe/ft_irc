@@ -1,17 +1,27 @@
 #include "Client.hpp"
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sstream>
-
-Client::Client() : fd(-1), alive(false) {}
-Client::Client(int fd, struct sockaddr_in host) : fd(fd), host(host), alive(true) {}
-
+/*
+** ------------------------------- CONSTRUCTOR --------------------------------
+*/
+Client::Client() : _fd(-1), _alive(false) {}
+Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true) {}
+/*
+** -------------------------------- DESTRUCTOR --------------------------------
+*/
 Client::~Client() {}
+/*
+** --------------------------------- ACCESSOR ---------------------------------
+*/
+int Client::getFd() const { return this->_fd; }
+const struct sockaddr_in& Client::getAddr() const { return this->_host; }
+bool Client::isAlive() const { return this->_alive; }
 
-int Client::getFd() const { return this->fd; }
-const struct sockaddr_in& Client::getAddr() const { return this->host; }
-bool Client::isAlive() const { return this->alive; }
+/*
+** --------------------------------- OVERLOAD ---------------------------------
+*/
 
+/*
+** --------------------------------- METHODS ----------------------------------
+*/
 bool Client::match(const std::string& input) const {
 
 }
@@ -22,18 +32,18 @@ void Client::disconnect() {
 
 void Client::disconnect(const char* reason) {
 	// TODO
-	    if (!this->alive)
+	if (!this->_alive)
         return;
 
     std::string message = "ERROR :";
     message += reason;
     message += "\r\n";
 
-    send(this->fd, message.c_str(), message.size(), 0);
+    send(this->_fd, message.c_str(), message.size(), 0);
 
-    close(this->fd);
-    this->alive = false;
-    this->fd = -1;
+    close(this->_fd);
+    this->_alive = false;
+    this->_fd = -1;
 }
 
 std::string Client::toString() const {
@@ -43,6 +53,7 @@ std::string Client::toString() const {
 		<< '!'
 		<< this->name
 		<< '@'
-		<< inet_ntoa(this->host.sin_addr);
+		<< inet_ntoa(this->_host.sin_addr);
 	return stream.str();
 }
+/* ************************************************************************** */

@@ -2,12 +2,16 @@
 
 #include <netinet/in.h>
 #include <string>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sstream>
+#include <unistd.h>
 
 class Client {
 private:
-	const int fd;
-	struct sockaddr_in host;
-	bool alive;
+	int _fd;
+	struct sockaddr_in _host;
+	bool _alive;
 
 public:
 	std::string nickname;
