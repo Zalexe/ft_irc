@@ -236,7 +236,7 @@ void Server::executeCommand(Client* client,
     else if (command == "PRIVMSG")
         handlePrivmsg(client, line);
     else if (command == "QUIT")
-        disconnectClient(client->getFd());
+        handleQuit(client->getFd());
     else if (command == "KICK")
         handleKick(client, line);
     else if (command == "INVITE")
@@ -247,6 +247,18 @@ void Server::executeCommand(Client* client,
         handleMode(client, line);
     else
         sendError(client, "421", ":Unknown command");
+}
+
+
+
+void Server::handleQuit(Client& client, const std::string& reason)
+{
+    std::string quitMsg = ":" + client.getPrefix() +
+                          " QUIT :" + reason + "\r\n";
+
+    broadcastToSharedChannels(client, quitMsg);
+
+    client.disconnect(reason);
 }
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
