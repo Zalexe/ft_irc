@@ -35,3 +35,30 @@ bool wildcard_match(const char* str, const char* pattern) {
 
     return *p == '\0';
 }
+
+
+bool validatePort(const char* str, int &port)
+{
+    if (!str)
+        return false;
+
+    char* end;
+    errno = 0;
+    long val = std::strtol(str, &end, 10);
+    // Check if entire string was numeric
+    if (*end != '\0')
+        return false;
+    if (errno != 0 || val < 1024 || val > 65535)
+        return false;
+    port = static_cast<int>(val);
+    return true;
+}
+
+
+bool validatePassword(const char* str, std::string &password)
+{
+    if (!str || str[0] == '\0')
+        return false;
+    password = str;
+    return true;
+}
