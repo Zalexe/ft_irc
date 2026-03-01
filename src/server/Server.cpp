@@ -1,13 +1,15 @@
 
 #include "Server.hpp"
+#include <cstddef>
+#include <ctime>
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-Server::Server(){}
+Server::Server() : _creationDate(std::time(NULL)) {}
 
 Server::Server(int Port, std::string Pass)
-    : _pass(Pass), _port(Port)
+    : _pass(Pass), _port(Port), _creationDate(std::time(NULL))
 {
     struct sockaddr_in address;
     int opt = 1;
@@ -249,7 +251,9 @@ void Server::executeCommand(Client* client,
         sendError(client, "421", ":Unknown command");
 }
 
-
+const std::time_t& Server::getCreationDate() const {
+	return this->_creationDate;
+}
 
 void Server::handleQuit(Client& client, const std::string& reason)
 {

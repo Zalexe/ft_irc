@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -22,8 +23,6 @@
 #define SERVER_VERSION "1.0"
 #define SERVER_DESCRIPTION "IRC Server for 42 by cmarrued & intherna"
 
-#define WELCOME_MESSAGE "Welcome to ft_irc server, " // Host to be appended to the end
-
 /* TODO:
 * Because of IRC's Scandinavian origin, the characters {}|^ are
 * considered to be the lower case equivalents of the characters []\~,
@@ -38,6 +37,7 @@ class Server{
         Client* _serverClient;
         std::string _pass, _serverPrefix, _message;
 	    int _serverSocket, _epollSocket, _port;
+		const std::time_t _creationDate;
     public:
         Server();
         Server(int Port, std::string Pass);
@@ -54,5 +54,5 @@ class Server{
         void handleRegistration(Client* client, const std::string& command, const std::string& line);
         void executeCommand(Client* client, const std::string& command, const std::string& line);
         Client* getClientByFd(int fd);
-        
+        const std::time_t& getCreationDate() const;
 };

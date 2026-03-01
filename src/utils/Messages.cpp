@@ -1,6 +1,7 @@
 #include "Messages.hpp"
 #include "Server.hpp"
 #include <cstdarg>
+#include <ctime>
 #include <stdexcept>
 
 std::string buildMessage(int n, const char* sender, const char* cmd, ...) {
@@ -58,24 +59,31 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 }
 
 // Registration (these 4 messages are sent)
-std::string buildResponseWelcome(const Client* target) {
-	std::string welcome(WELCOME_MESSAGE);
-	welcome.append(target->toString());
+std::string buildResponseWelcome(const Client& target) {
+	std::string welcome("Welcome to ft_irc server by cmarrued & intherna, ");
+	welcome.append(target.toString());
 
-	return buildResponseCodeMessage(2, WELCOME, target->nickname.c_str(), welcome.c_str());
+	return buildResponseCodeMessage(2, WELCOME, target.nickname.c_str(), welcome.c_str());
 }
 
-std::string buildResponseYourhost(const Client* target) {
+std::string buildResponseYourhost(const Client& target) {
+	std::string yourHost(SERVER_NAME);
+	yourHost.append(" version ").append(SERVER_VERSION);
 
+	return buildResponseCodeMessage(2, YOUR_HOST, target.nickname.c_str(), yourHost.c_str());
 }
 
-std::string buildResponseCreationDate(const Client* target) {
+std::string buildResponseCreationDate(const Client& target, const time_t& time) {
+	char buf[60];
+	std::tm *local = std::localtime(&time);
+	strftime(buf, 60, "This server was created at %Y-%m-%d %H:%M:%S", local);
 
+	return buildResponseCodeMessage(2, SERVER_CREATED, target.nickname.c_str(), buf);
 }
 
-std::string buildResponseMyInfo(const Client* target) {
-
+std::string buildResponseMyInfo(const Client& target) {
+	
 }
 
 // Info
-std::string buildResponseWhoisuser(const char* targetNick, const Client* user);
+std::string buildResponseWhoisuser(const char* targetNick, const Client& user);

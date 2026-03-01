@@ -5,7 +5,7 @@
 #define WELCOME "001"
 #define YOUR_HOST "002"
 #define SERVER_CREATED "003"
-#define SERVER_VERSION "004"
+#define SERVER_VERSION_RES "004"
 
 // Errors
 #define NO_SUCH_NICKNAME "401"
@@ -39,10 +39,10 @@ std::string buildQuitMessage(const char* sender, const char* targetNick, const c
 std::string buildResponseCodeMessage(int n, const char* code, ...);
 
 // Registration (these 4 messages are sent)
-std::string buildResponseWelcome(const Client* target);
-std::string buildResponseYourhost(const Client* target);
-std::string buildResponseCreationDate(const Client* target);
-std::string buildResponseMyInfo(const Client* target);
+std::string buildResponseWelcome(const Client& target);
+std::string buildResponseYourhost(const Client& target);
+std::string buildResponseCreationDate(const Client& target);
+std::string buildResponseMyInfo(const Client& target);
 
 // Info
-std::string buildResponseWhoisuser(const char* targetNick, const Client* user);
+std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
