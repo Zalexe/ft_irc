@@ -1,6 +1,7 @@
 #include "Client.hpp"
 #include "Messages.hpp"
 #include "Server.hpp"
+#include "Utils.hpp"
 #include <cstring>
 #include <sys/socket.h>
 /*
@@ -74,4 +75,22 @@ std::string Client::extractLine() {
 	_buffer.erase(0, pos + 2);
 	return line;
 }
+
+bool Client::isAuthorized() const { return this->_authorized; }
+void Client::setAuthorized(bool b) { this->_authorized = b; }
+
+bool Client::isRegistered() const { return this->_registered; }
+void Client::setRegistered(bool b) { this->_registered = b; }
+
+void Client::setNick(const std::string& nick) { this->nickname = nick; }
+void Client::setUser(const std::string& user) { this->name = user; }
+
+std::string Client::getNick() const { return this->nickname; }
+std::string Client::getUser() const { return this->name; }
+
+uint8_t Client::getUserModes() const { return this->_modes; }
+bool Client::isMode(uint8_t mode) const { return this->_modes & mode; }
+void Client::setUserMode(uint8_t mode) { this->_modes |= mode; }
+void Client::unsetUserMode(uint8_t mode) { this->_modes &= ~mode; }
+
 /* ************************************************************************** */

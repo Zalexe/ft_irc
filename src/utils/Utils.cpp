@@ -1,4 +1,5 @@
 #include "Utils.hpp"
+#include <cerrno>
 
 /**
  * Compare a string against a pattern with '*' and '?' wildcards.
@@ -21,7 +22,6 @@ bool wildcard_match(const char* str, const char* pattern) {
             ++s;
         }
         else if (star) {
-            // backtrack to last '*'
             p = star + 1;
             s = ++ss;
         }
@@ -30,7 +30,6 @@ bool wildcard_match(const char* str, const char* pattern) {
         }
     }
 
-    // Skip remaining '*' in pattern
     while (*p == '*') ++p;
 
     return *p == '\0';

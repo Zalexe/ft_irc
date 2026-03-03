@@ -1,4 +1,5 @@
 #include "Messages.hpp"
+#include "Channel.hpp"
 #include "Server.hpp"
 #include <cstdarg>
 #include <ctime>
@@ -81,7 +82,7 @@ std::string buildResponseCreationDate(const Client& target, const time_t& time) 
 	return buildResponseCodeMessage(2, SERVER_CREATED, target.nickname.c_str(), buf);
 }
 
-std::string buildResponseMyInfo(const Client& target) {
+std::string buildResponseMyInfo(const Client& target, const Channel& channel) {
 	
 }
 

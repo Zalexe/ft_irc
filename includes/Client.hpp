@@ -1,12 +1,16 @@
 #pragma once
 
+#include <stdint.h>
 #include <netinet/in.h>
 #include <string>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <sstream>
 #include <unistd.h>
-#include "Utils.hpp"
+
+#define USERMODE_INVISIBLE 1 << 0
+#define USERMODE_WALLOPS 1 << 1
+#define USERMODE_NOTICES 1 << 2
+#define USERMODE_OPERATOR 1 << 3
 
 class Client {
 private:
@@ -16,6 +20,7 @@ private:
 	bool _alive;
 	bool _authorized;
 	bool _registered;
+	uint8_t _modes;
 public:
 	std::string nickname;
 	std::string name;
@@ -37,7 +42,10 @@ public:
 	void disconnect(const char* reason);
 	std::string toString() const;
 
-
+	uint8_t getUserModes() const;
+	bool isMode(uint8_t mode) const;
+	void setUserMode(uint8_t mode);
+	void unsetUserMode(uint8_t mode);
 
 	bool isAuthorized() const;
 	void setAuthorized(bool);
