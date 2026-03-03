@@ -94,5 +94,8 @@ std::string buildResponseMyInfo(Client& target, const Channel& channel) {
 
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
+	std::string finalArg(":");
+	finalArg.append(user.realName);
 
+	return buildResponseCodeMessage(3, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }

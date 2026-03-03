@@ -26,6 +26,7 @@ public:
 
 	std::string nickname;
 	std::string name;
+	std::string realName;
 
 	Client();
 	Client(int fd, struct sockaddr_in host);
