@@ -22,6 +22,8 @@ private:
     std::set<Client*> _invited;
 
 public:
+	static const char* MODES;
+
     Channel(const std::string& name);
     ~Channel();
 

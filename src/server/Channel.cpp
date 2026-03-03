@@ -1,4 +1,9 @@
 #include "Channel.hpp"
+
+/*
+** ------------------------------- STATIC --------------------------------
+*/
+const char* Channel::MODES = "itkol";
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
@@ -132,15 +137,6 @@ void Channel::removeUserLimit()
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
-bool Channel::isFull() const
-{
-    if (_userLimit == 0)
-        return false;
-
-    return _members.size() >= _userLimit;
-}
-
-
 void Channel::broadcast(const std::string& msg, Client* exclude)
 {
     for (std::set<Client*>::iterator it = _members.begin();

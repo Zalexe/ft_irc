@@ -5,7 +5,7 @@
 #define WELCOME "001"
 #define YOUR_HOST "002"
 #define SERVER_CREATED "003"
-#define SERVER_VERSION_RES "004"
+#define SERVER_MYINFO "004"
 
 // Errors
 #define NO_SUCH_NICKNAME "401"
@@ -29,11 +29,13 @@
 #include <string>
 
 /**
-* Builds a regular command message with variable params.
-* 'n' is the amount of params after 'cmd'.
-* it prefixes the last param with ':' automatically
-* The message shall not be more than 512 characters long, a runtime error is thrown otherwise.
-*/
+ * Builds a regular command message with variable params.
+ * 'n' is the amount of params after 'cmd'.
+ * 'sender' may be a user's host or SERVER_NAME, could be whatever really
+ * cmd is the command to execute, maybe a 3-digit code or something like "PRIVMSG" or "QUIT"
+ * it prefixes the last param with ':' automatically
+ * The message should not be more than 512 characters long, a runtime error is thrown otherwise.
+ */
 std::string buildMessage(int n, const char* sender, const char* cmd, ...);
 std::string buildQuitMessage(const char* sender, const char* targetNick, const char* reason);
 std::string buildResponseCodeMessage(int n, const char* code, ...);

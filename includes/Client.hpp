@@ -10,7 +10,6 @@
 #define USERMODE_INVISIBLE 1 << 0
 #define USERMODE_WALLOPS 1 << 1
 #define USERMODE_NOTICES 1 << 2
-#define USERMODE_OPERATOR 1 << 3
 
 class Client {
 private:
@@ -22,6 +21,9 @@ private:
 	bool _registered;
 	uint8_t _modes;
 public:
+	static const char* NON_OP_MODES;
+	static const char* OP_MODES;
+
 	std::string nickname;
 	std::string name;
 

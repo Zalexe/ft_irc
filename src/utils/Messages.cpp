@@ -1,5 +1,6 @@
 #include "Messages.hpp"
 #include "Channel.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 #include <cstdarg>
 #include <ctime>
@@ -82,9 +83,16 @@ std::string buildResponseCreationDate(const Client& target, const time_t& time) 
 	return buildResponseCodeMessage(2, SERVER_CREATED, target.nickname.c_str(), buf);
 }
 
-std::string buildResponseMyInfo(const Client& target, const Channel& channel) {
-	
+std::string buildResponseMyInfo(Client& target, const Channel& channel) {
+	std::string myInfo(SERVER_NAME);
+	myInfo.append(" ").append(SERVER_VERSION)
+		.append(" ").append(channel.isOperator(&target) ? Client::OP_MODES : Client::NON_OP_MODES)
+		.append(" ").append(Channel::MODES);
+
+	return buildResponseCodeMessage(2, SERVER_MYINFO, target.nickname.c_str(), myInfo.c_str());
 }
 
 // Info
-std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
+std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
+
+}

@@ -4,11 +4,17 @@
 #include "Utils.hpp"
 #include <cstring>
 #include <sys/socket.h>
+
+/*
+** ------------------------------- STATIC --------------------------------
+*/
+const char* Client::NON_OP_MODES = "isw";
+const char* Client::OP_MODES = "iosw";
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-Client::Client() : _fd(-1), _alive(false) {}
-Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true), _authorized(false), _registered(false) {}
+Client::Client() : _fd(-1), _alive(false), _modes(USERMODE_NOTICES | USERMODE_WALLOPS) {}
+Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true) {}
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
@@ -46,11 +52,6 @@ void Client::disconnect(const char* reason) {
 }
 
 std::string Client::toString() const {
-	/**
-	* nickname ≤ 64
-	* username ≤ 64
-	* host ≤ 128
-	**/
 	std::stringstream stream;
 
 	stream << this->nickname
