@@ -12,6 +12,7 @@
 // Errors
 #define NO_SUCH_NICKNAME "401"
 #define NO_SUCH_CHANNEL "403"
+#define UNKNOWN_ERROR "421"
 #define NICKNAME_IN_USE "433"
 #define NOT_REGISTERED "451"
 
