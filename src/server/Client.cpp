@@ -6,11 +6,6 @@
 #include <sys/socket.h>
 
 /*
-** ------------------------------- STATIC --------------------------------
-*/
-const char* Client::NON_OP_MODES = "isw";
-const char* Client::OP_MODES = "iosw";
-/*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 Client::Client() : _fd(-1), _alive(false), _modes(USERMODE_NOTICES | USERMODE_WALLOPS) {}
@@ -89,6 +84,15 @@ void Client::setUser(const std::string& user) { this->name = user; }
 std::string Client::getNick() const { return this->nickname; }
 std::string Client::getUser() const { return this->name; }
 
+std::string Client::getAvailableModes(bool isOperator) const {
+	std::string res("aiws");
+	if (!this->isMode(USERMODE_RESTRICTED))
+		res.push_back('r');
+	if (isOperator)
+		res.push_back('o');
+
+	return res;
+}
 
 bool Client::hasNick() const { return !this->nickname.empty(); }
 bool Client::hasUser() const { return !this->name.empty(); }
