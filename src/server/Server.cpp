@@ -168,6 +168,8 @@ void Server::executeCommand(Client* client,
         handleTopic(client, line);
     else if (command == "MODE")
         handleMode(client, line);
+    else if (command == "NICK")
+        handleNick(client, line);
     else
         sendError(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }

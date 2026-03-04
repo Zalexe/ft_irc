@@ -63,7 +63,7 @@ class Server{
         void tryRegister(Client* client);
         void handlePass(Client* client, const std::string& line);
         std::string toLower(const std::string& str);
-        bool nickExists(const std::string& nick);
+        bool nickExists(const std::string& nick, Client* requester);
         void handleNick(Client* client, const std::string& line);
         void handleUser(Client* client, const std::string& line);
         //handle registration
