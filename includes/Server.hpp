@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "Channel.hpp"
+#include "Messages.hpp"
 #include "Client.hpp"
 
 #define SERVER_NAME "ft_irc"
@@ -43,16 +44,59 @@ class Server{
         Server(int Port, std::string Pass);
         ~Server();
 
+        //main loop
         void run();
+        //detect new clients or handle client
         void acceptClient();
-        void handleClient(int fd);
-        void sendWelcome(Client* client);
-        void disconnectClient(int fd);
 
+        //process commands received
         std::string extractCommand(const std::string& line);
         void processCommand(Client* client, std::string line);
-        void handleRegistration(Client* client, const std::string& command, const std::string& line);
         void executeCommand(Client* client, const std::string& command, const std::string& line);
+
+        //read message and send to appropiate handle
+        void handleClient(int fd);
+        void disconnectClient(int fd);
+
+        //handle registration helpers
+        void sendWelcome(Client* client);
+        void tryRegister(Client* client);
+        void handlePass(Client* client, const std::string& line);
+        bool nickExists(const std::string& nick);
+        void handleNick(Client* client, const std::string& line);
+        void handleUser(Client* client, const std::string& line);
+        //handle registration
+        void handleRegistration(Client* client, const std::string& command, const std::string& line);
+
+
+        //handle Join
+        void handleJoin(Client* client, const std::string& line);
+
+        //handle Private message
+        void handlePrivmsg(Client* client, const std::string& line);
+
+        //handle Quit
+        void handleQuit(int ClientFd);
+
+        //handle kick
+        void handleKick(Client* client, const std::string& line);
+
+        //handle Invite
+        void handleInvite(Client* client, const std::string& line);
+
+        //handle Topic
+        void handleTopic(Client* client, const std::string& line);
+
+        //handle Mode
+        void handleMode(Client* client, const std::string& line);
+
+        //handle registration
+        void handleRegistration(Client* client, const std::string& command, const std::string& line);
+
+        //send error
+        void sendError(Client* client, const std::string& command, const std::string& line);
+
+        //accessors
         Client* getClientByFd(int fd);
         const std::time_t& getCreationDate() const;
 };

@@ -118,6 +118,71 @@ void Server::acceptClient()
     Client* newClient = new Client(client_fd, client_addr);
     _clients.push_back(newClient);
 }
+//helper
+std::string toUpper(std::string s)
+{
+    for (size_t i = 0; i < s.size(); ++i)
+        s[i] = std::toupper(s[i]);
+    return s;
+}
+
+std::string Server::extractCommand(const std::string& line)
+{
+    std::stringstream ss(line);
+    std::string cmd;
+    ss >> cmd;
+
+    // remove trailing \r if exists
+    if (!cmd.empty() && cmd[cmd.size() - 1] == '\r')
+        cmd.erase(cmd.size() - 1);
+
+    return cmd;
+}
+void Server::processCommand(Client* client, std::string line)
+{
+   if (line.empty())
+        return;
+    std::string command = toUpper(extractCommand(line));
+    if (!client->isRegistered())
+        handleRegistration(client, command, line);
+    else
+        executeCommand(client, command, line);
+}
+
+
+void Server::executeCommand(Client* client,
+                            const std::string& command,
+                            const std::string& line)
+{
+    if (command == "JOIN")
+        handleJoin(client, line);
+    else if (command == "PRIVMSG")
+        handlePrivmsg(client, line);
+    else if (command == "QUIT")
+        handleQuit(client->getFd());
+    else if (command == "KICK")
+        handleKick(client, line);
+    else if (command == "INVITE")
+        handleInvite(client, line);
+    else if (command == "TOPIC")
+        handleTopic(client, line);
+    else if (command == "MODE")
+        handleMode(client, line);
+    else
+        sendError(client, "421", ":Unknown command\r\n");
+}
+
+
+
+/*
+** -------------------------------- DESTRUCTOR --------------------------------
+*/
+Server::~Server(){}
+
+/*
+** -------------------------------- HANDLES -----------------------------------
+*/
+
 
 void Server::handleClient(int fd)
 {
@@ -153,107 +218,7 @@ void Server::handleClient(int fd)
     }
 }
 
-void Server::sendWelcome(Client* client)
-{
-    std::string nick = client->getNick();
-    std::string user = client->getUser();
-    std::string host = "localhost";
 
-    std::stringstream ss;
-
-    ss << ":" << _serverPrefix
-       << " 001 " << nick
-       << " :Welcome to the Internet Relay Network "
-       << nick << "!" << user << "@" << host << "\r\n";
-
-    ssize_t sent = send(client->getFd(), ss.str().c_str(), ss.str().length(), 0);
-    if (sent < 0)
-    {
-        if (errno == EAGAIN || errno == EWOULDBLOCK)
-        {
-        }
-        else
-        {
-            disconnectClient(client->getFd());
-        }
-    }
-}
-std::string Server::extractCommand(const std::string& line)
-{
-    std::stringstream ss(line);
-    std::string cmd;
-    ss >> cmd;
-
-    // remove trailing \r if exists
-    if (!cmd.empty() && cmd[cmd.size() - 1] == '\r')
-        cmd.erase(cmd.size() - 1);
-
-    return cmd;
-}
-void Server::processCommand(Client* client, std::string line)
-{
-   if (line.empty())
-        return;
-
-    std::string command = extractCommand(line);
-
-    if (!client->isRegistered())
-        handleRegistration(client, command, line);
-    else
-        executeCommand(client, command, line);
-}
-void Server::handleRegistration(Client* client,
-                                const std::string& command,
-                                const std::string& line)
-{
-    std::stringstream ss(line);
-    std::string cmd;
-    ss >> cmd;
-
-    if (cmd == "PASS")
-        handlePass(client, ss);
-    else if (cmd == "NICK")
-        handleNick(client, ss);
-    else if (cmd == "USER")
-        handleUser(client, ss);
-    else
-        return; // Ignore everything else until registered
-
-    // Check if registration complete
-    if (client->isAuthorized() &&
-        !client->getNick().empty() &&
-        !client->getUser().empty())
-    {
-        client->setRegistered(true);
-        sendWelcome(client);
-    }
-}
-
-void Server::executeCommand(Client* client,
-                            const std::string& command,
-                            const std::string& line)
-{
-    if (command == "JOIN")
-        handleJoin(client, line);
-    else if (command == "PRIVMSG")
-        handlePrivmsg(client, line);
-    else if (command == "QUIT")
-        handleQuit(client->getFd());
-    else if (command == "KICK")
-        handleKick(client, line);
-    else if (command == "INVITE")
-        handleInvite(client, line);
-    else if (command == "TOPIC")
-        handleTopic(client, line);
-    else if (command == "MODE")
-        handleMode(client, line);
-    else
-        sendError(client, "421", ":Unknown command");
-}
-
-const std::time_t& Server::getCreationDate() const {
-	return this->_creationDate;
-}
 
 void Server::handleQuit(Client& client, const std::string& reason)
 {
@@ -265,11 +230,11 @@ void Server::handleQuit(Client& client, const std::string& reason)
     client.disconnect(reason);
 }
 /*
-** -------------------------------- DESTRUCTOR --------------------------------
-*/
-Server::~Server(){}
-
-/*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
+
+const std::time_t& Server::getCreationDate() const {
+	return this->_creationDate;
+}
+
 /* ************************************************************************** */
