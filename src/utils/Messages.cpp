@@ -1,10 +1,8 @@
 #include "Messages.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
-#include "Server.hpp"
 #include <cstdarg>
 #include <ctime>
-#include <stdexcept>
 
 std::string buildMessage(int n, const char* sender, const char* cmd, ...) {
 	va_list list;
@@ -27,7 +25,7 @@ std::string buildMessage(int n, const char* sender, const char* cmd, ...) {
 	va_end(list);
 
 	if (str.size() > 512)
-		throw std::runtime_error("The message is too large (> 512)");
+		str.resize(512);
 	return str;
 }
 
@@ -55,8 +53,6 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 	str.append("\r\n");
 	va_end(list);
 
-	if (str.size() > 512)
-		throw std::runtime_error("The message is too large (> 512)");
 	return str;
 }
 

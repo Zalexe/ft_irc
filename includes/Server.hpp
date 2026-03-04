@@ -90,9 +90,6 @@ class Server{
         //handle Mode
         void handleMode(Client* client, const std::string& line);
 
-        //handle registration
-        void handleRegistration(Client* client, const std::string& command, const std::string& line);
-
         //send error
         void sendError(Client* client, const std::string& command, const std::string& line);
 
