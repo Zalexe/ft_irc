@@ -62,6 +62,7 @@ class Server{
         void sendWelcome(Client* client);
         void tryRegister(Client* client);
         void handlePass(Client* client, const std::string& line);
+        std::string toLower(const std::string& str);
         bool nickExists(const std::string& nick);
         void handleNick(Client* client, const std::string& line);
         void handleUser(Client* client, const std::string& line);

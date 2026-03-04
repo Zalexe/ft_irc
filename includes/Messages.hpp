@@ -13,8 +13,12 @@
 #define NO_SUCH_NICKNAME "401"
 #define NO_SUCH_CHANNEL "403"
 #define UNKNOWN_ERROR "421"
+#define NO_NICKNAME_GIVEN "431"
 #define NICKNAME_IN_USE "433"
 #define NOT_REGISTERED "451"
+#define NOT_ENOUGH_PARAM "461"
+#define ALREADY_REG "462"
+#define INCORRECT_PASS "464"
 
 // Whois
 #define WHOISUSER "311"

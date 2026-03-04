@@ -89,6 +89,10 @@ void Client::setUser(const std::string& user) { this->name = user; }
 std::string Client::getNick() const { return this->nickname; }
 std::string Client::getUser() const { return this->name; }
 
+
+bool Client::hasNick() const { return !this->nickname.empty(); }
+bool Client::hasUser() const { return !this->name.empty(); }
+
 uint8_t Client::getUserModes() const { return this->_modes; }
 bool Client::isMode(uint8_t mode) const { return this->_modes & mode; }
 void Client::setUserMode(uint8_t mode) { this->_modes |= mode; }

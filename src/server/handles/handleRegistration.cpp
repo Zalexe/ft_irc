@@ -23,13 +23,10 @@ void Server::tryRegister(Client* client)
 {
     if (client->isRegistered())
         return;
-
     if (!client->hasNick())
         return;
-
     if (!client->hasUser())
         return;
-
     if (!client->isAuthorized())
         return;
 
@@ -38,9 +35,7 @@ void Server::tryRegister(Client* client)
 }
 
 
-void Server::handleRegistration(Client* client,
-                                const std::string& command,
-                                const std::string& line)
+void Server::handleRegistration(Client* client, const std::string& command, const std::string& line)
 {
     if (command == "PASS"){
         handlePass(client, line);
@@ -61,11 +56,12 @@ void Server::handleRegistration(Client* client,
     }
     tryRegister(client);
 }
-void Server::handlePass(Client* client, const std::string& line){
+void Server::handlePass(Client* client, const std::string& line)
+{
     if (client->isRegistered())
     {
-        //replace with the message functions
-        send(client->getFd(), "462 :You may not reregister\r\n", 31, 0);
+        std::string e = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
 
@@ -75,23 +71,41 @@ void Server::handlePass(Client* client, const std::string& line){
 
     if (pass.empty())
     {
-        //replace with the message functions
-        send(client->getFd(), "461 PASS :Not enough parameters\r\n", 36, 0);
+        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
 
     if (pass != _pass)
     {
-        //replace with the message functions
-        send(client->getFd(), "464 :Password incorrect\r\n", 27, 0);
+        std::string e = buildResponseCodeMessage(2, INCORRECT_PASS, client->nickname.c_str(), "Password incorrect");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         disconnectClient(client->getFd());
         return;
     }
 
     client->setAuthorized(true);
 }
+std::string Server::toLower(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i)
+        result[i] = std::tolower(result[i]);
+    return result;
+}
+bool Server::nickExists(const std::string& nick)
+{
+    std::string lowerNick = toLower(nick);
 
-bool Server::nickExists(const std::string& nick){}
+    for (size_t i = 0; i < _clients.size(); ++i)
+    {
+        Client* client = _clients[i];
+
+        if (toLower(client->getNick()) == lowerNick)
+            return true;
+    }
+    return false;
+}
 
 void Server::handleNick(Client* client, const std::string& line)
 {
@@ -101,15 +115,15 @@ void Server::handleNick(Client* client, const std::string& line)
 
     if (nick.empty())
     {
-        send(client->getFd(), "431 :No nickname given\r\n", 26, 0);
+        std::string e = buildResponseCodeMessage(1, NO_NICKNAME_GIVEN, "No nickname given");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
 
     if (nickExists(nick))
     {
-        send(client->getFd(),
-             "433 * " + nick + " :Nickname is already in use\r\n",
-             43 + nick.length(), 0);
+        std::string e = buildResponseCodeMessage(1, NICKNAME_IN_USE, "Nickname in use");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
 
@@ -119,9 +133,8 @@ void Server::handleUser(Client* client, const std::string& line)
 {
     if (client->isRegistered())
     {
-        send(client->getFd(),
-             "462 :You may not reregister\r\n",
-             31, 0);
+        std::string e = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
 
@@ -132,30 +145,21 @@ void Server::handleUser(Client* client, const std::string& line)
 
     if (username.empty() || hostname.empty() || servername.empty())
     {
-        send(client->getFd(),
-             "461 USER :Not enough parameters\r\n",
-             36, 0);
+        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
-
-    // Get the rest as realname
     std::getline(ss, realname);
 
     if (realname.empty())
     {
-        send(client->getFd(),
-             "461 USER :Not enough parameters\r\n",
-             36, 0);
+        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+        send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
-
-    // Remove leading space
     if (realname[0] == ' ')
         realname.erase(0, 1);
-
-    // Remove leading ':'
     if (!realname.empty() && realname[0] == ':')
         realname.erase(0, 1);
-
     client->setUser(username);
 }

@@ -62,6 +62,9 @@ public:
 	std::string getNick() const;
 	std::string getUser() const;
 
+	bool hasNick() const;
+	bool hasUser() const;
+
 	void appendBuffer(const std::string& data);
 	bool hasFullLine() const;
 	std::string extractLine();
