@@ -91,7 +91,7 @@ class Server{
         void handleMode(Client* client, const std::string& line);
 
         //send error
-        void sendError(Client* client, const std::string& command, const std::string& line);
+        void sendError(Client* client, const std::string& msg);
 
         //accessors
         Client* getClientByFd(int fd);

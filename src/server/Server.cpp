@@ -169,9 +169,8 @@ void Server::executeCommand(Client* client,
     else if (command == "MODE")
         handleMode(client, line);
     else
-        sendError(client, "421", ":Unknown command\r\n");
+        sendError(client, buildResponseCodeMessage(2, WELCOME, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }
-
 
 
 /*

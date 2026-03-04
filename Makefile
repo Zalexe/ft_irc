@@ -12,7 +12,7 @@
 
 NAME = ircserver
 
-SRCS = src/main.cpp 
+SRCS = src/main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp 
 
 INC = includes/.hpp
 
