@@ -98,3 +98,8 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 
 	return buildResponseCodeMessage(3, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
+
+// Error
+std::string Messages::buildResponseNoPrivileges(const char* targetNick) {
+
+}

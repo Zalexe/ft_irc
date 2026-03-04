@@ -33,6 +33,9 @@
 #define NAMES_LIST "353"
 #define END_OF_NAMES "366"
 
+// Errors
+#define NOPRIVILEGES "481"
+
 #include <string>
 
 /**
@@ -54,3 +57,6 @@ std::string buildResponseMyInfo(const Client& target);
 
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
+
+// Error
+std::string buildResponseNoPrivileges(const char* targetNick);
