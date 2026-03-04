@@ -34,6 +34,9 @@
 #define END_OF_NAMES "366"
 
 // Errors
+#define NOSUCHCHANNEL "403"
+#define NEEDMOREPARAMS "461"
+#define UNKNOWN_CHANNEL_MODE "472"
 #define NOPRIVILEGES "481"
 
 #include <string>
@@ -60,3 +63,6 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
 
 // Error
 std::string buildResponseNoPrivileges(const char* targetNick);
+std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel);
+std::string buildResponseUnknownChannelMode(const char* targetNick, char mode);
+std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd);

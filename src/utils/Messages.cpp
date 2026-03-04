@@ -96,10 +96,29 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 	std::string finalArg(":");
 	finalArg.append(user.realName);
 
-	return buildResponseCodeMessage(3, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
+	return buildResponseCodeMessage(6, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
 
 // Error
-std::string Messages::buildResponseNoPrivileges(const char* targetNick) {
+std::string buildResponseNoPrivileges(const char* targetNick) {
+	return buildResponseCodeMessage(2, NOPRIVILEGES, targetNick, "Permission Denied- You're not an IRC operator");
+}
 
+std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel) {
+	return buildResponseCodeMessage(3, NOSUCHCHANNEL, targetNick, channel, "No such channel");
+}
+
+std::string buildResponseUnknownChannelMode(const char* targetNick, char mode, const char* channel) {
+	std::string msg("is unknown mode char to me for ");
+	msg.append(channel);
+
+	char arr[2];
+	arr[0] = mode;
+	arr[1] = '\0';
+
+	return buildResponseCodeMessage(3, UNKNOWN_CHANNEL_MODE, targetNick, arr, msg.c_str());
+}
+
+std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd) {
+	return buildResponseCodeMessage(3, NEEDMOREPARAMS, targetNick, cmd, "Not enough parameters");
 }
