@@ -53,6 +53,9 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 	str.append("\r\n");
 	va_end(list);
 
+	if (str.size() > 512)
+		str.resize(512);
+
 	return str;
 }
 
@@ -82,7 +85,7 @@ std::string buildResponseCreationDate(const Client& target, const time_t& time) 
 std::string buildResponseMyInfo(Client& target, const Channel& channel) {
 	std::string myInfo(SERVER_NAME);
 	myInfo.append(" ").append(SERVER_VERSION)
-		.append(" ").append(channel.isOperator(&target) ? Client::OP_MODES : Client::NON_OP_MODES)
+		.append(" ").append(target.getAvailableModes(channel.isOperator(&target)).c_str())
 		.append(" ").append(Channel::MODES);
 
 	return buildResponseCodeMessage(2, SERVER_MYINFO, target.nickname.c_str(), myInfo.c_str());

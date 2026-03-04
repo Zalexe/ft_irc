@@ -7,9 +7,11 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#define USERMODE_INVISIBLE 1 << 0
-#define USERMODE_WALLOPS 1 << 1
-#define USERMODE_NOTICES 1 << 2
+#define USERMODE_AWAY 1 << 0 /* +a */
+#define USERMODE_INVISIBLE 1 << 1 /* +i */
+#define USERMODE_WALLOPS 1 << 2 /* +w */
+#define USERMODE_RESTRICTED 1 << 3 /* +r */
+#define USERMODE_NOTICES 1 << 4 /* +s */
 
 class Client {
 private:
@@ -21,9 +23,6 @@ private:
 	bool _registered;
 	uint8_t _modes;
 public:
-	static const char* NON_OP_MODES;
-	static const char* OP_MODES;
-
 	std::string nickname;
 	std::string name;
 	std::string realName;
@@ -45,6 +44,7 @@ public:
 	void disconnect(const char* reason);
 	std::string toString() const;
 
+	std::string getAvailableModes(bool isOperator) const;
 	uint8_t getUserModes() const;
 	bool isMode(uint8_t mode) const;
 	void setUserMode(uint8_t mode);
