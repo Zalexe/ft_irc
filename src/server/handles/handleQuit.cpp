@@ -1,5 +1,13 @@
-#include "Client.hpp"
+#include "Server.hpp"
 
-void handleQuit(int ClientFd) {
 
+
+void Server::handleQuit(Client& client, const std::string& reason)
+{
+    std::string quitMsg = ":" + client.getPrefix() +
+                          " QUIT :" + reason + "\r\n";
+
+    broadcastToSharedChannels(client, quitMsg);
+
+    client.disconnect(reason);
 }
