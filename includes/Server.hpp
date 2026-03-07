@@ -44,7 +44,7 @@ class Server{
         void handleRegistration(Client* client, const std::string& command, std::stringstream& line);
         void handleJoin(Client* client, std::stringstream params);
         void handlePrivmsg(Client* client, std::stringstream& params);
-        void handleQuit(int ClientFd, const std::string& reason);
+        void handleQuit(Client* client, const std::string& reason);
         void handleKick(Client* client, std::stringstream& params);
         void handleInvite(Client* client, std::stringstream& params);
         void handleTopic(Client* client, std::stringstream& params);
@@ -76,9 +76,6 @@ class Server{
         bool nickExists(const std::string& nick, Client* requester);
         void handleNick(Client* client, std::stringstream& line);
         void handleUser(Client* client, std::stringstream& line);
-
-        //handle quit helpers
-        void broadcastToSharedChannels(Client* quitter, const std::string& msg);
 
         //send error
         void sendError(Client* client, const std::string& msg);

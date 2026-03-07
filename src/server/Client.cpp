@@ -21,6 +21,9 @@ int Client::getFd() const { return this->_fd; }
 const struct sockaddr_in& Client::getAddr() const { return this->_host; }
 bool Client::isAlive() const { return this->_alive; }
 
+void Client::addChannel(Channel* ch) { _channels.insert(ch); }
+void Client::removeChannel(Channel* ch) { _channels.erase(ch); }
+const std::set<Channel*>& Client::getChannels() const { return _channels; }
 /*
 ** --------------------------------- OVERLOAD ---------------------------------
 */

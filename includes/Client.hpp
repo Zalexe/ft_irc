@@ -15,6 +15,8 @@ private:
 	bool _alive;
 	bool _authorized;
 	bool _registered;
+
+	std::set<Channel*> _channels;
 public:
 	std::string nickname;
 	std::string name;
@@ -53,6 +55,10 @@ public:
 
 	bool hasNick() const;
 	bool hasUser() const;
+
+	void addChannel(Channel* ch);
+    void removeChannel(Channel* ch);
+    const std::set<Channel*>& getChannels() const;
 
 	void appendBuffer(const std::string& data);
 	bool hasFullLine() const;

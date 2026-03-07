@@ -33,6 +33,7 @@ void Channel::addMember(Client* client)
     _invited.erase(client);
     if (_members.size() == 1)
         _operators.insert(client);
+    client->addChannel(this);
 }
 void Channel::removeMember(Client* client)
 {
@@ -41,6 +42,7 @@ void Channel::removeMember(Client* client)
 
     _members.erase(client);
     _operators.erase(client);
+    client->removeChannel(this);
 }
 bool Channel::isMember(Client* client) const
 {
@@ -150,11 +152,12 @@ void Channel::broadcast(const std::string& msg, Client* exclude)
     const char* data = msg.c_str();
     size_t len = msg.size();
 
-    for (std::set<Client*>::iterator it = _members.begin();
-         it != _members.end(); ++it)
+    for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); ++it)
     {
-        if (*it != exclude)
-            send((*it)->getFd(), data, len, 0);
+        if (*it == exclude)
+            continue;
+
+        send((*it)->getFd(), data, len, 0);
     }
 }
 /* ************************************************************************** */

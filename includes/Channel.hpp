@@ -60,8 +60,8 @@ public:
     void removeKey();
     bool checkKey(const std::string& key) const;
     bool hasKey() const;
-	const std::string& getKey() const;
-
+    const std::string& getKey() const;
+    
     void setUserLimit(size_t limit);
     void removeUserLimit();
     bool isFull() const;
