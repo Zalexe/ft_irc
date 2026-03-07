@@ -95,6 +95,8 @@ class Server{
         void sendError(Client* client, const std::string& msg);
 
         //accessors
-        Client* getClientByFd(int fd);
+        Client* getClientByFd(int fd) const;
+        Client* getClientByName(const std::string& name) const;
+		Channel* getChannelByName(const std::string& name) const;
         const std::time_t& getCreationDate() const;
 };

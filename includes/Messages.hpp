@@ -35,6 +35,7 @@
 
 // Errors
 #define NOSUCHCHANNEL "403"
+#define USER_NOT_IN_CHANNEL "441"
 #define NEEDMOREPARAMS "461"
 #define UNKNOWN_CHANNEL_MODE "472"
 #define NOPRIVILEGES "481"
@@ -66,3 +67,4 @@ std::string buildResponseNoPrivileges(const char* targetNick);
 std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel);
 std::string buildResponseUnknownChannelMode(const char* targetNick, char mode);
 std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd);
+std::string buildResponseUserNotInChannel(const char* targetNick, const char* nickNotFound, const char* channel);

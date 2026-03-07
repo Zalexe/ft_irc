@@ -122,3 +122,7 @@ std::string buildResponseUnknownChannelMode(const char* targetNick, char mode, c
 std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd) {
 	return buildResponseCodeMessage(3, NEEDMOREPARAMS, targetNick, cmd, "Not enough parameters");
 }
+
+std::string buildResponseUserNotInChannel(const char* targetNick, const char* nickNotFound, const char* channel) {
+	return buildResponseCodeMessage(4, USER_NOT_IN_CHANNEL, targetNick, nickNotFound, channel, "They aren't on that channel");
+}

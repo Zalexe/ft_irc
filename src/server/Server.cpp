@@ -227,4 +227,31 @@ const std::time_t& Server::getCreationDate() const {
 	return this->_creationDate;
 }
 
+Client* Server::getClientByFd(int fd) const {
+	for (size_t i = 0; i < this->_clients.size(); i++) {
+		if (this->_clients[i]->getFd() == fd)
+			return this->_clients[i];
+	}
+
+	return NULL;
+}
+
+Client* Server::getClientByName(const std::string& name) const {
+	for (size_t i = 0; i < this->_clients.size(); i++) {
+		if (this->_clients[i]->nickname == name)
+			return this->_clients[i];
+	}
+
+	return NULL;
+}
+
+Channel* Server::getChannelByName(const std::string& name) const {
+	for (size_t i = 0; i < this->_channels.size(); i++) {
+		if (this->_channels[i]->getName() == name)
+			return this->_channels[i];
+	}
+
+	return NULL;
+}
+
 /* ************************************************************************** */

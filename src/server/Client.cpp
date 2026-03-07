@@ -8,7 +8,7 @@
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-Client::Client() : _fd(-1), _alive(false), _modes(USERMODE_NOTICES | USERMODE_WALLOPS) {}
+Client::Client() : _fd(-1), _alive(false) {}
 Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true) {}
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
@@ -84,22 +84,11 @@ void Client::setUser(const std::string& user) { this->name = user; }
 std::string Client::getNick() const { return this->nickname; }
 std::string Client::getUser() const { return this->name; }
 
-std::string Client::getAvailableModes(bool isOperator) const {
-	std::string res("aiws");
-	if (!this->isMode(USERMODE_RESTRICTED))
-		res.push_back('r');
-	if (isOperator)
-		res.push_back('o');
-
-	return res;
+std::string Client::getAvailableModes() const {
+	return "";
 }
 
 bool Client::hasNick() const { return !this->nickname.empty(); }
 bool Client::hasUser() const { return !this->name.empty(); }
-
-uint8_t Client::getUserModes() const { return this->_modes; }
-bool Client::isMode(uint8_t mode) const { return this->_modes & mode; }
-void Client::setUserMode(uint8_t mode) { this->_modes |= mode; }
-void Client::unsetUserMode(uint8_t mode) { this->_modes &= ~mode; }
 
 /* ************************************************************************** */

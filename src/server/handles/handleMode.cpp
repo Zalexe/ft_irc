@@ -5,7 +5,43 @@
 #include "Messages.hpp"
 #include "Server.hpp"
 
-// TODO
+static inline bool handleSetPass(Channel& channel, bool value, std::stringstream& line, std::string& response, const Client& client) {
+	if (!value) {
+		channel.removeKey();
+	} else {
+		std::string param;
+		line >> param;
+
+		if (param.length() == 0) {
+			response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
+			return false;
+		}
+
+		channel.setKey(param);
+	}
+	return true;
+}
+
+static inline bool handleSetOperator(Channel &channel, bool value, std::stringstream& line, std::string& response, const Client& client, const Server& server) {
+	std::string param;
+	line >> param;
+
+	if (param.length() == 0) {
+		response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
+		return false;
+	}
+
+	Client* target = server.getClientByName(param);
+	if (!target) {
+		response = buildResponseUserNotInChannel(client.nickname.c_str(), param.c_str(), channel.getName().c_str());
+		return false;
+	}
+
+	value ? channel.addOperator(target) : channel.removeOperator(target);
+
+	return true;
+}
+
 void Server::handleMode(Client* client, const std::string& line) {
 	std::stringstream linestream(line);
 	std::string dummy;
@@ -22,19 +58,12 @@ void Server::handleMode(Client* client, const std::string& line) {
 	}
 	target.erase(0);
 
-	Channel* ch = NULL;
-
-	for (size_t i = 0; i < _channels.size(); i++) {
-		if (_channels[i]->getName() == target) {
-			ch = _channels[i];
-			break;
-		}
-	}
+	Channel* ch = this->getChannelByName(target);
 
 	if (!ch) {
 		sendError(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
-	} else if (!ch->isOperator(client)) {
+	} else if (!ch->isOperator(client)) { // TODO: Probably should do this earlier
 		sendError(client, buildResponseNoPrivileges(client->nickname.c_str()));
 		return;
 	}
@@ -47,20 +76,29 @@ void Server::handleMode(Client* client, const std::string& line) {
 	}
 
 	const char* m = modes.c_str();
-	bool value = m[0] != '-';
+	if (m[0] != '-' && m[0] != '+') {
+		sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0]));
+		return;
+	}
+	bool value = m[0] == '+';
 
 	while (*m && !isalpha(*m))
 		m++;
 
+	bool valid = true;
+	std::string message;
+
 	while (*m) {
+		if (!valid) {
+			sendError(client, message);
+			return;
+		}
 		switch (*m) {
 			case 'i': ch->setInviteOnly(value); break;
 			case 't': ch->setTopicRestricted(value); break;
-			case 'i': ch->set(value); break;
-			case 'i': ch->setInviteOnly(value); break;
-			case 'i': ch->setInviteOnly(value); break;
-			case 'i': ch->setInviteOnly(value); break;
-			case 'i': ch->setInviteOnly(value); break;
+			case 'k': valid = handleSetPass(*ch, value, linestream, message, *client); break;
+			case 'o': ch->setInviteOnly(value); break;
+			case 'l': ch->setInviteOnly(value); break;
 			default: {
 				sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
 				return;
