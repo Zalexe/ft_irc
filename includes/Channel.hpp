@@ -36,6 +36,7 @@ public:
     void addMember(Client*);
     void removeMember(Client*);
     bool isMember(Client*) const;
+    const std::set<Client*>& getMembers() const;
 
     size_t memberCount() const;
 

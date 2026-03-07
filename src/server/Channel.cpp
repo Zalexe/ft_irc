@@ -46,7 +46,10 @@ bool Channel::isMember(Client* client) const
 {
     return _members.find(client) != _members.end();
 }
-
+const std::set<Client*>& Channel::getMembers() const
+{
+    return _members;
+}
 void Channel::addOperator(Client* client)
 {
     if (!client)
@@ -139,11 +142,14 @@ void Channel::removeUserLimit()
 */
 void Channel::broadcast(const std::string& msg, Client* exclude)
 {
+    const char* data = msg.c_str();
+    size_t len = msg.size();
+
     for (std::set<Client*>::iterator it = _members.begin();
          it != _members.end(); ++it)
     {
         if (*it != exclude)
-            send((*it)->getFd(), msg.c_str(), msg.size(), 0);
+            send((*it)->getFd(), data, len, 0);
     }
 }
 /* ************************************************************************** */

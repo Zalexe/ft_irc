@@ -77,6 +77,9 @@ class Server{
         void handleNick(Client* client, std::stringstream& line);
         void handleUser(Client* client, std::stringstream& line);
 
+        //handle quit helpers
+        void broadcastToSharedChannels(Client* quitter, const std::string& msg);
+
         //send error
         void sendError(Client* client, const std::string& msg);
 
@@ -84,5 +87,6 @@ class Server{
         Client* getClientByFd(int fd) const;
         Client* getClientByName(const std::string& name) const;
 		Channel* getChannelByName(const std::string& name) const;
+        
         const std::time_t& getCreationDate() const;
 };

@@ -159,7 +159,7 @@ void Server::executeCommand(Client* client,
     else if (command == "PRIVMSG")
         handlePrivmsg(client, params);
     else if (command == "QUIT")
-        handleQuit(client->getFd());
+        handleQuit(client->getFd(), " has quit");
     else if (command == "KICK")
         handleKick(client, params);
     else if (command == "INVITE")
