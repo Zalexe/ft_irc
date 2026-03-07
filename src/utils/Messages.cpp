@@ -1,6 +1,7 @@
 #include "Messages.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
 #include <cstdarg>
 #include <ctime>
 
@@ -82,10 +83,10 @@ std::string buildResponseCreationDate(const Client& target, const time_t& time) 
 	return buildResponseCodeMessage(2, SERVER_CREATED, target.nickname.c_str(), buf);
 }
 
-std::string buildResponseMyInfo(Client& target, const Channel& channel) {
+std::string buildResponseMyInfo(Client& target) {
 	std::string myInfo(SERVER_NAME);
 	myInfo.append(" ").append(SERVER_VERSION)
-		.append(" ").append(target.getAvailableModes(channel.isOperator(&target)).c_str())
+		.append(" ").append(target.getAvailableModes().c_str())
 		.append(" ").append(Channel::MODES);
 
 	return buildResponseCodeMessage(2, SERVER_MYINFO, target.nickname.c_str(), myInfo.c_str());
@@ -99,9 +100,40 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 	return buildResponseCodeMessage(6, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
 
+std::string buildChannelModeIs(const Client& target, const Channel* channel) {
+	std::string str(":");
+	str.reserve(100);
+	str.append(SERVER_NAME);
+	str.push_back(' ');
+	str.append(CHANNEL_MODE_IS);
+	str.push_back(' ');
+	str.append(target.nickname.c_str());
+	str.push_back(' ');
+	str.push_back('#');
+	str.append(channel->getName());
+	str.push_back(' ');
+	str.push_back('+');
+
+	std::string params;
+	if (channel->isInviteOnly())
+		str.push_back('i');
+	if (channel->isTopicRestricted())
+		str.push_back('t');
+	if (channel->hasKey()) {
+		str.push_back('k');
+		params.append(" ").append(channel);
+	}
+
+
+}
+
 // Error
 std::string buildResponseNoPrivileges(const char* targetNick) {
 	return buildResponseCodeMessage(2, NOPRIVILEGES, targetNick, "Permission Denied- You're not an IRC operator");
+}
+
+std::string buildResponseChannelOpNeeded(const char* targetNick, const char* channel) {
+	return buildResponseCodeMessage(2, CHANNEL_OP_NEEDED, targetNick, channel, "You're not a channel operator");
 }
 
 std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel) {

@@ -27,6 +27,7 @@
 #define ENDOFWHOIS "318"
 
 // Channel info
+#define CHANNEL_MODE_IS "324"
 #define NO_TOPIC "331"
 #define TOPIC "332"
 #define TOPIC_METADATA "333"
@@ -39,6 +40,7 @@
 #define NEEDMOREPARAMS "461"
 #define UNKNOWN_CHANNEL_MODE "472"
 #define NOPRIVILEGES "481"
+#define CHANNEL_OP_NEEDED "482"
 
 #include <string>
 
@@ -61,9 +63,11 @@ std::string buildResponseMyInfo(const Client& target);
 
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
+std::string buildChannelModeIs(const char* targetNick, const Channel* channel);
 
 // Error
 std::string buildResponseNoPrivileges(const char* targetNick);
+std::string buildResponseChannelOpNeeded(const char* targetNick, const char* channel);
 std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel);
 std::string buildResponseUnknownChannelMode(const char* targetNick, char mode);
 std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd);

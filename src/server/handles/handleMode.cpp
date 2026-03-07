@@ -1,16 +1,17 @@
 #include <cctype>
 #include <cstddef>
+#include <cstdlib>
 #include <sstream>
 #include <sys/socket.h>
 #include "Messages.hpp"
 #include "Server.hpp"
 
-static inline bool handleSetPass(Channel& channel, bool value, std::stringstream& line, std::string& response, const Client& client) {
+static inline bool handleSetPass(Channel& channel, bool value, std::stringstream& params, std::string& response, const Client& client) {
 	if (!value) {
 		channel.removeKey();
 	} else {
 		std::string param;
-		line >> param;
+		params >> param;
 
 		if (param.length() == 0) {
 			response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
@@ -22,9 +23,9 @@ static inline bool handleSetPass(Channel& channel, bool value, std::stringstream
 	return true;
 }
 
-static inline bool handleSetOperator(Channel &channel, bool value, std::stringstream& line, std::string& response, const Client& client, const Server& server) {
+static inline bool handleSetOperator(Channel &channel, bool value, std::stringstream& params, std::string& response, const Client& client, const Server& server) {
 	std::string param;
-	line >> param;
+	params >> param;
 
 	if (param.length() == 0) {
 		response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
@@ -37,8 +38,26 @@ static inline bool handleSetOperator(Channel &channel, bool value, std::stringst
 		return false;
 	}
 
-	value ? channel.addOperator(target) : channel.removeOperator(target); // Add/Remove operator status
+	value ? channel.addOperator(target) : channel.removeOperator(target);
 
+	return true;
+}
+
+static inline bool handleSetUserLimit(Channel& channel, bool value, std::stringstream& params, std::string& response, const Client& client) {
+	if (!value)
+		channel.removeUserLimit();
+	else {
+		std::string param;
+		params >> param;
+		size_t limit = atoll(param.c_str());
+		
+		if (limit < 1) {
+			response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
+			return false;
+		}
+
+		channel.setUserLimit(limit);
+	}
 	return true;
 }
 
@@ -60,8 +79,8 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	if (!ch) {
 		sendError(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
-	} else if (!ch->isOperator(client)) { // TODO: Probably should do this earlier
-		sendError(client, buildResponseNoPrivileges(client->nickname.c_str()));
+	} else if (!ch->isOperator(client)) {
+		sendError(client, buildResponseChannelOpNeeded(client->nickname.c_str(), ch->getName().c_str()));
 		return;
 	}
 
@@ -95,7 +114,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 			case 't': ch->setTopicRestricted(value); break;
 			case 'k': valid = handleSetPass(*ch, value, params, message, *client); break;
 			case 'o': valid = handleSetOperator(*ch, value, params, message, *client, *this); break;
-			case 'l': ch->setInviteOnly(value); break;
+			case 'l': valid = handleSetUserLimit(*ch, value, params, message, *client); break;
 			default: {
 				sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
 				return;
