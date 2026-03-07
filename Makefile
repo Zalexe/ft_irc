@@ -6,7 +6,7 @@
 #    By: cmarrued <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/03 16:56:12 by cmarrued          #+#    #+#              #
-#    Updated: 2025/12/03 16:56:13 by cmarrued         ###   ########.fr        #
+#    Updated: 2026/03/07 15:28:16 by intherna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,16 +18,18 @@ INC = includes/.hpp
 
 OBJS = ${SRCS:.cpp=.o}
 
+DEPS = ${SRCS:.cpp=.d}
+
 CPLUS	= c++
 
-CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic
+CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic -MMD
 
 RM	= rm -rf
 			
 			
 all:			${NAME} 
 
-%.o: %.cpp 	$(INC)	
+%.o: %.cpp
 			${CPLUS} ${CFLAGS} -c $< -o $@
 
 ${NAME}:	Makefile ${OBJS}
@@ -43,3 +45,5 @@ fclean:			clean
 re:		fclean all
 
 .PHONY:			all clean fclean re
+
+-include ${DEPS}

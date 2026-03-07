@@ -42,13 +42,18 @@ class Server{
 
 		// Handler helpers
         void handleRegistration(Client* client, const std::string& command, const std::string& line);
-        void handleJoin(Client* client, std::stringstream stream);
-        void handlePrivmsg(Client* client, std::stringstream& line);
+        void handleJoin(Client* client, std::stringstream params);
+        void handlePrivmsg(Client* client, std::stringstream& params);
         void handleQuit(int ClientFd, const std::string& reason);
-        void handleKick(Client* client, std::stringstream& line);
-        void handleInvite(Client* client, std::stringstream& line);
-        void handleTopic(Client* client, std::stringstream& line);
-        void handleMode(Client* client, std::stringstream& line);
+        void handleKick(Client* client, std::stringstream& params);
+        void handleInvite(Client* client, std::stringstream& params);
+        void handleTopic(Client* client, std::stringstream& params);
+        void handleMode(Client* client, std::stringstream& params);
+
+        //process commands received
+        std::string extractCommand(std::stringstream& ss);
+        void processCommand(Client* client, const std::string& line);
+        void executeCommand(Client* client, const std::string& command, std::stringstream& params);
     public:
         Server();
         Server(int Port, std::string Pass);
@@ -58,11 +63,6 @@ class Server{
         void run();
         //detect new clients or handle client
         void acceptClient();
-
-        //process commands received
-        std::string extractCommand(const std::string& line);
-        void processCommand(Client* client, std::string line);
-        void executeCommand(Client* client, const std::string& command, const std::string& line);
 
         //read message and send to appropiate handle
         void handleClient(int fd);

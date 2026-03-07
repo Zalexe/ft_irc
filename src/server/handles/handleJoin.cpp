@@ -1,3 +1,3 @@
 #include "Server.hpp"
 
-void ServerhandleJoin(Client* client, std::stringstream& line) {}
+void ServerhandleJoin(Client* client, std::stringstream& params) {}

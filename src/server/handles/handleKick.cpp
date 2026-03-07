@@ -1,5 +1,5 @@
 #include "Server.hpp"
 
-void Server::handleKick(Client* client, std::stringstream& line) {
+void Server::handleKick(Client* client, std::stringstream& params) {
 
 }

@@ -126,9 +126,8 @@ std::string toUpper(std::string s)
     return s;
 }
 
-std::string Server::extractCommand(const std::string& line)
+std::string Server::extractCommand(std::stringstream& ss)
 {
-    std::stringstream ss(line);
     std::string cmd;
     ss >> cmd;
 
@@ -138,38 +137,39 @@ std::string Server::extractCommand(const std::string& line)
 
     return cmd;
 }
-void Server::processCommand(Client* client, std::string line)
+void Server::processCommand(Client* client, const std::string& line)
 {
-   if (line.empty())
+	if (line.empty())
         return;
-    std::string command = toUpper(extractCommand(line));
+	std::stringstream remain(line);
+    std::string command = toUpper(extractCommand(remain));
     if (!client->isRegistered())
         handleRegistration(client, command, line);
     else
-        executeCommand(client, command, line);
+        executeCommand(client, command, remain);
 }
 
 
 void Server::executeCommand(Client* client,
                             const std::string& command,
-                            const std::string& line)
+                            std::stringstream& params)
 {
     if (command == "JOIN")
-        handleJoin(client, line);
+        handleJoin(client, params);
     else if (command == "PRIVMSG")
-        handlePrivmsg(client, line);
+        handlePrivmsg(client, params);
     else if (command == "QUIT")
         handleQuit(client->getFd());
     else if (command == "KICK")
-        handleKick(client, line);
+        handleKick(client, params);
     else if (command == "INVITE")
-        handleInvite(client, line);
+        handleInvite(client, params);
     else if (command == "TOPIC")
-        handleTopic(client, line);
+        handleTopic(client, params);
     else if (command == "MODE")
-        handleMode(client, line);
+        handleMode(client, params);
     else if (command == "NICK")
-        handleNick(client, line);
+        handleNick(client, params);
     else
         sendError(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }
@@ -252,6 +252,14 @@ Channel* Server::getChannelByName(const std::string& name) const {
 	}
 
 	return NULL;
+}
+
+/*
+** --------------------------------- OTHERS ---------------------------------
+*/
+
+void Server::sendError(Client* client, const std::string& msg) {
+	send(client->getFd(), msg.c_str(), msg.length(), 0);
 }
 
 /* ************************************************************************** */
