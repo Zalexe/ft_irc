@@ -90,7 +90,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             send(client->getFd(), topicMsg.c_str(), topicMsg.size(), 0);
         }
         // Send current channel modes
-        std::string modeMsg = buildResponseChannelModeIs(*client, ch);
+        std::string modeMsg = buildResponseChannelModeIs(*client, *ch);
         send(client->getFd(), modeMsg.c_str(), modeMsg.size(), 0);
         // Remove client from invite list if present
         if (ch->isInvited(client))
