@@ -33,7 +33,7 @@ static inline bool handleSetOperator(Channel &channel, bool value, std::stringst
 	}
 
 	Client* target = server.getClientByName(param);
-	if (!target) {
+	if (!target || !channel.isMember(target)) {
 		response = buildResponseUserNotInChannel(client.nickname.c_str(), param.c_str(), channel.getName().c_str());
 		return false;
 	}
@@ -67,10 +67,10 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	// Channel param check
 	params >> target;
 	if (target.length() == 0) {
-		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+		sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
 		return;
 	} else if (target[0] != '#') {
-		sendError(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
+		sendMessage(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
 	}
 	target.erase(0);
@@ -78,28 +78,28 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	Channel* ch = this->getChannelByName(target);
 
 	if (!ch) {
-		sendError(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
+		sendMessage(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
 	}
 
 	std::string modes;
 	params >> modes;
 	if (modes.length() == 0) {
-		sendError(client, buildResponseChannelModeIs(*client, *ch)); // Not really an error, but this method is useful
-		sendError(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
+		sendMessage(client, buildResponseChannelModeIs(*client, *ch)); // Not really an error, but this method is useful
+		sendMessage(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
 		return;
 	} else if (modes.length() < 2) {
-		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+		sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
 		return;
-	} if (!ch->isOperator(client)) {
-		sendError(client, buildResponseChannelOpNeeded(client->nickname.c_str(), ch->getName().c_str()));
+	} else if (!ch->isOperator(client)) {
+		sendMessage(client, buildResponseChannelOpNeeded(client->nickname.c_str(), ch->getName().c_str()));
 		return;
 	}
 
 	// Modes parsing
 	const char* m = modes.c_str();
 	if (m[0] != '-' && m[0] != '+') {
-		sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0]));
+		sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0]));
 		return;
 	}
 	bool value = m[0] == '+';
@@ -112,7 +112,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 
 	while (*m) {
 		if (!valid) {
-			sendError(client, message);
+			sendMessage(client, message);
 			return;
 		}
 		switch (*m) {
@@ -122,11 +122,10 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 			case 'o': valid = handleSetOperator(*ch, value, params, message, *client, *this); break;
 			case 'l': valid = handleSetUserLimit(*ch, value, params, message, *client); break;
 			default: {
-				sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
+				sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
 				return;
 			}
 		}
 		m++;
 	}
-	// TODO: invite list
 }

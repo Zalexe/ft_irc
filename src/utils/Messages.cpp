@@ -83,7 +83,7 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 	return str;
 }
 
-std::string buildResponseCodeMeessageNoTrail(int n, const char* code, ...) {
+std::string buildResponseCodeMessageNoTrail(int n, const char* code, ...) {
 	va_list list;
 	va_start(list, code);
 	std::string str;
@@ -147,11 +147,11 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 }
 
 std::string buildResponseInviting(const char* targetNick, const char* channel, const char* invited) {
-
+	return buildResponseCodeMessageNoTrail(3, INVITE_SUCCESS, targetNick, channel, invited);
 }
 
 std::string buildResponseInviteListSingle(const char* targetNick, const char* channel, const char* invitemask) {
-	return buildResponseCodeMeessageNoTrail(3, INVITE_LIST, targetNick, channel, invitemask);
+	return buildResponseCodeMessageNoTrail(3, INVITE_LIST, targetNick, channel, invitemask);
 }
 
 std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel) {
@@ -173,18 +173,7 @@ std::string buildResponsesInviteList(const char* targetNick, const Channel& chan
 }
 
 std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
-	std::string str(":");
-	str.reserve(100);
-	str.append(SERVER_NAME);
-	str.push_back(' ');
-	str.append(CHANNEL_MODE_IS);
-	str.push_back(' ');
-	str.append(target.nickname.c_str());
-	str.push_back(' ');
-	str.push_back('#');
-	str.append(channel.getName());
-	str.push_back(' ');
-	str.push_back('+');
+	std::string str("+");
 
 	std::string params;
 	if (channel.isInviteOnly())
@@ -203,15 +192,7 @@ std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
 		params.append(stream.str());
 	}
 
-	return buildResponseCodeMeessageNoTrail(5, CHANNEL_MODE_IS, target.nickname.c_str(), "#")
-
-	str.append(params);
-	str.append("\r\n");
-
-	if (str.size() >= 512)
-		str.resize(512);
-
-	return str;
+	return buildResponseCodeMessageNoTrail(4, CHANNEL_MODE_IS, target.nickname.c_str(), ("#" + channel.getName()).c_str(), str.c_str(), params.c_str());
 }
 
 // Error
@@ -244,4 +225,15 @@ std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd)
 
 std::string buildResponseUserNotInChannel(const char* targetNick, const char* nickNotFound, const char* channel) {
 	return buildResponseCodeMessage(4, USER_NOT_IN_CHANNEL, targetNick, nickNotFound, channel, "They aren't on that channel");
+}
+
+std::string buildResponseNoSuchNick(const char* targetNick, const char *nick) {
+	return buildResponseCodeMessage(3, NOSUCHNICK, targetNick, nick, "No such nick/channel");
+}
+
+std::string buildResponseUserAlreadyInChannel(const char* targetNick, const char* nick, const char* channel) {
+	return buildResponseCodeMessage(4, USERINCHANNEL, targetNick, nick, channel, "is already on channel");
+}
+std::string buildResponseNotOnChannel(const char* targetNick, const char* channel) {
+	return buildResponseCodeMessage(3, ERR_NOTONCHANNEL, targetNick, channel, "You're not on that channel");
 }

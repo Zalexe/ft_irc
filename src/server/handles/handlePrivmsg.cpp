@@ -6,7 +6,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
     std::string targetName;
     if (!(params >> targetName))
     {
-        sendError(client, "No target for PRIVMSG");
+        sendMessage(client, "No target for PRIVMSG");
         return;
     }
     std::string message;
@@ -15,7 +15,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         message.erase(0, 1); // remove leading space
     if (message.empty() || message[0] != ':')
     {
-        sendError(client, "No text to send");
+        sendMessage(client, "No text to send");
         return;
     }
     message.erase(0, 1);

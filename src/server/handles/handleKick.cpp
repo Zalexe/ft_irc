@@ -6,7 +6,7 @@ void Server::handleKick(Client* client, std::stringstream& params)
     std::string channelName, targetNick, reason;
     if (!(params >> channelName >> targetNick))
     {
-        sendError(client, "Need more parameters for KICK");
+        sendMessage(client, "Need more parameters for KICK");
         return;
     }
     std::getline(params, reason);

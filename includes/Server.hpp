@@ -79,8 +79,8 @@ class Server{
         //handle disconnect help
         void disconnectClient(int fd, const char* reason);
 
-        //send error
-        void sendError(Client* client, const std::string& msg);
+		// Send message
+        void sendMessage(Client* client, const std::string& msg);
 
         //accessors
         Client* getClientByFd(int fd) const;

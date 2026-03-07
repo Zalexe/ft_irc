@@ -172,7 +172,7 @@ void Server::executeCommand(Client* client,
     else if (command == "NICK")
         handleNick(client, params);
     else
-        sendError(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
+        sendMessage(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }
 
 
@@ -260,7 +260,7 @@ Channel* Server::getChannelByName(const std::string& name) const {
 ** --------------------------------- OTHERS ---------------------------------
 */
 
-void Server::sendError(Client* client, const std::string& msg) {
+void Server::sendMessage(Client* client, const std::string& msg) {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
 }
 

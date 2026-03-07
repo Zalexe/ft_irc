@@ -6,7 +6,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
     std::string channelsStr, keysStr;
     if (!(params >> channelsStr))
     {
-        sendError(client, "Need more parameters for JOIN");
+        sendMessage(client, "Need more parameters for JOIN");
         return;
     }
     std::getline(params, keysStr);

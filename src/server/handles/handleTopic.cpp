@@ -6,7 +6,7 @@ void Server::handleTopic(Client* client, std::stringstream& params)
     std::string channelName;
     if (!(params >> channelName))
     {
-        sendError(client, "No channel specified for TOPIC");
+        sendMessage(client, "No channel specified for TOPIC");
         return;
     }
     Channel* ch = getChannelByName(channelName);

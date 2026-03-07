@@ -16,6 +16,8 @@
 #define NO_NICKNAME_GIVEN "431"
 #define NICKNAME_IN_USE "433"
 #define ERR_USERNOTINCHANNEL "441"
+#define ERR_NOTONCHANNEL "442"
+#define USERINCHANNEL "443"
 #define NOT_REGISTERED "451"
 #define NOT_ENOUGH_PARAM "461"
 #define ALREADY_REG "462"
@@ -43,6 +45,7 @@
 #define END_OF_NAMES "366"
 
 // Errors
+#define NOSUCHNICK "401"
 #define NOSUCHCHANNEL "403"
 #define USER_NOT_IN_CHANNEL "441"
 #define NEEDMOREPARAMS "461"
@@ -86,3 +89,6 @@ std::string buildResponseNoSuchChannel(const char* targetNick, const char* chann
 std::string buildResponseUnknownChannelMode(const char* targetNick, char mode);
 std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd);
 std::string buildResponseUserNotInChannel(const char* targetNick, const char* nickNotFound, const char* channel);
+std::string buildResponseNoSuchNick(const char* targetNick, const char *nick);
+std::string buildResponseUserAlreadyInChannel(const char* targetNick, const char* nick, const char* channel);
+std::string buildResponseNotOnChannel(const char* targetNick, const char* channel);
