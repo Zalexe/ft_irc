@@ -36,6 +36,7 @@
 #define NO_TOPIC "331"
 #define TOPIC "332"
 #define TOPIC_METADATA "333"
+#define INVITE_SUCCESS "341"
 #define INVITE_LIST "346"
 #define END_OF_INVITE_LIST "347"
 #define NAMES_LIST "353"
@@ -59,8 +60,10 @@
  * it prefixes the last param with ':' automatically
  */
 std::string buildMessage(int n, const char* sender, const char* cmd, ...);
+std::string buildMessageNoTrail(int n, const char* sender, const char* cmd, ...);
 std::string buildQuitMessage(const char* sender, const char* targetNick, const char* reason);
 std::string buildResponseCodeMessage(int n, const char* code, ...);
+std::string buildResponseCodeMeessageNoTrail(int n, const char* code, ...);
 
 // Registration (these 4 messages are sent)
 std::string buildResponseWelcome(const Client& target);
@@ -70,6 +73,7 @@ std::string buildResponseMyInfo(const Client& target);
 
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
+std::string buildResponseInviting(const char* targetNick, const char* channel, const char* invited);
 std::string buildResponseInviteListSingle(const char* targetNick, const char* channel, const char* invitemask);
 std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel);
 std::string buildResponsesInviteList(const char* targetNick, const Channel& channel);

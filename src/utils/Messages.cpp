@@ -31,6 +31,28 @@ std::string buildMessage(int n, const char* sender, const char* cmd, ...) {
 	return str;
 }
 
+std::string buildMessageNoTrail(int n, const char* sender, const char* cmd, ...) {
+	va_list list;
+	va_start(list, cmd);
+	std::string str;
+	str.reserve(90);
+
+	str.push_back(':');
+	str.append(sender);
+	str.push_back(' ');
+	str.append(cmd);
+	for (int i = 0; i < n; i++) {
+		str.push_back(' ');
+		str.append(va_arg(list, const char*));
+	}
+	str.append("\r\n");
+	va_end(list);
+
+	if (str.size() > 512)
+		str.resize(512);
+	return str;
+}
+
 std::string buildQuitMessage(const char* sender, const char* target, const char* reason) {
 	return buildMessage(2, sender, "QUIT", target, reason);
 }
@@ -50,6 +72,29 @@ std::string buildResponseCodeMessage(int n, const char* code, ...) {
 		if ((i + 1) == n)
 			str.push_back(':');
 
+		str.append(va_arg(list, const char*));
+	}
+	str.append("\r\n");
+	va_end(list);
+
+	if (str.size() > 512)
+		str.resize(512);
+
+	return str;
+}
+
+std::string buildResponseCodeMeessageNoTrail(int n, const char* code, ...) {
+	va_list list;
+	va_start(list, code);
+	std::string str;
+	str.reserve(90);
+
+	str.push_back(':');
+	str.append(SERVER_NAME);
+	str.push_back(' ');
+	str.append(code);
+	for (int i = 0; i < n; i++) {
+		str.push_back(' ');
 		str.append(va_arg(list, const char*));
 	}
 	str.append("\r\n");
@@ -101,17 +146,12 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 	return buildResponseCodeMessage(6, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
 
+std::string buildResponseInviting(const char* targetNick, const char* channel, const char* invited) {
+
+}
+
 std::string buildResponseInviteListSingle(const char* targetNick, const char* channel, const char* invitemask) {
-	std::string res(":");
-	res.reserve(68);
-
-	res.append(SERVER_NAME); res.push_back(' ');
-	res.append(INVITE_LIST); res.push_back(' ');
-	res.append(targetNick); res.push_back(' ');
-	res.append(channel); res.push_back(' ');
-	res.append(invitemask).append("\r\n");
-
-	return res;
+	return buildResponseCodeMeessageNoTrail(3, INVITE_LIST, targetNick, channel, invitemask);
 }
 
 std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel) {
