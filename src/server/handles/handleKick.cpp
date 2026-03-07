@@ -19,7 +19,7 @@ void Server::handleKick(Client* client, std::stringstream& params)
         send(client->getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
-
+    
     Client* target = getClientByName(targetNick);
     if (!target || !ch->isMember(target))
     {
