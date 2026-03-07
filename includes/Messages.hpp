@@ -63,7 +63,7 @@ std::string buildMessage(int n, const char* sender, const char* cmd, ...);
 std::string buildMessageNoTrail(int n, const char* sender, const char* cmd, ...);
 std::string buildQuitMessage(const char* sender, const char* targetNick, const char* reason);
 std::string buildResponseCodeMessage(int n, const char* code, ...);
-std::string buildResponseCodeMeessageNoTrail(int n, const char* code, ...);
+std::string buildResponseCodeMessageNoTrail(int n, const char* code, ...);
 
 // Registration (these 4 messages are sent)
 std::string buildResponseWelcome(const Client& target);

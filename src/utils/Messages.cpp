@@ -203,6 +203,8 @@ std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
 		params.append(stream.str());
 	}
 
+	return buildResponseCodeMeessageNoTrail(5, CHANNEL_MODE_IS, target.nickname.c_str(), "#")
+
 	str.append(params);
 	str.append("\r\n");
 
