@@ -68,7 +68,7 @@ std::string buildResponseMyInfo(const Client& target);
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
 std::string buildResponseInviteListSingle(const char* targetNick, const char* channel, const char* invitemask);
-std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel, const char* invitemask);
+std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel);
 std::string buildResponsesInviteList(const char* targetNick, const Channel& channel);
 std::string buildResponseChannelModeIs(Client& target, const Channel& channel);
 

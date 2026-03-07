@@ -102,15 +102,33 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 }
 
 std::string buildResponseInviteListSingle(const char* targetNick, const char* channel, const char* invitemask) {
-	
+	std::string res(":");
+	res.reserve(68);
+
+	res.append(SERVER_NAME); res.push_back(' ');
+	res.append(INVITE_LIST); res.push_back(' ');
+	res.append(targetNick); res.push_back(' ');
+	res.append(channel); res.push_back(' ');
+	res.append(invitemask).append("\r\n");
+
+	return res;
 }
 
-std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel, const char* invitemask) {
-
+std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel) {
+	return buildResponseCodeMessage(2, targetNick, channel, "End of channel invite list");
 }
 
 std::string buildResponsesInviteList(const char* targetNick, const Channel& channel) {
-	std::string response;
+	std::string responses;
+	responses.reserve(channel.getInvites().size() * 46);
+
+	std::set<Client*>::const_iterator it = channel.getInvites().begin();
+	while (it != channel.getInvites().end()) {
+		responses.append(buildResponseInviteListSingle(targetNick, channel.getName().c_str(), (*it)->toString().c_str()));
+		it++;
+	}
+
+	responses.append(buildResponseEndOfInviteList(targetNick, channel.getName().c_str()));
 }
 
 std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
