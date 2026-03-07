@@ -64,6 +64,7 @@ static inline bool handleSetUserLimit(Channel& channel, bool value, std::strings
 void Server::handleMode(Client* client, std::stringstream& params) {
 	std::string target;
 
+	// Channel param check
 	params >> target;
 	if (target.length() == 0) {
 		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
@@ -79,18 +80,22 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	if (!ch) {
 		sendError(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
-	} else if (!ch->isOperator(client)) {
-		sendError(client, buildResponseChannelOpNeeded(client->nickname.c_str(), ch->getName().c_str()));
-		return;
 	}
 
 	std::string modes;
 	params >> modes;
-	if (modes.length() < 2) {
+	if (modes.length() == 0) {
+		sendError(client, buildResponseChannelModeIs(*client, *ch));
+		return;
+	} else if (modes.length() < 2) {
 		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+		return;
+	} if (!ch->isOperator(client)) {
+		sendError(client, buildResponseChannelOpNeeded(client->nickname.c_str(), ch->getName().c_str()));
 		return;
 	}
 
+	// Modes parsing
 	const char* m = modes.c_str();
 	if (m[0] != '-' && m[0] != '+') {
 		sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0]));

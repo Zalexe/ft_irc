@@ -4,6 +4,7 @@
 #include "Server.hpp"
 #include <cstdarg>
 #include <ctime>
+#include <sstream>
 
 std::string buildMessage(int n, const char* sender, const char* cmd, ...) {
 	va_list list;
@@ -100,7 +101,7 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 	return buildResponseCodeMessage(6, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
 
-std::string buildChannelModeIs(const Client& target, const Channel* channel) {
+std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
 	std::string str(":");
 	str.reserve(100);
 	str.append(SERVER_NAME);
@@ -110,21 +111,34 @@ std::string buildChannelModeIs(const Client& target, const Channel* channel) {
 	str.append(target.nickname.c_str());
 	str.push_back(' ');
 	str.push_back('#');
-	str.append(channel->getName());
+	str.append(channel.getName());
 	str.push_back(' ');
 	str.push_back('+');
 
 	std::string params;
-	if (channel->isInviteOnly())
+	if (channel.isInviteOnly())
 		str.push_back('i');
-	if (channel->isTopicRestricted())
+	if (channel.isTopicRestricted())
 		str.push_back('t');
-	if (channel->hasKey()) {
-		str.push_back('k');
-		params.append(" ").append(channel);
+	if (channel.isOperator(&target))
+		str.push_back('o');
+	if (channel.getUserLimit() != 0) {
+		str.push_back('l');
+		params.reserve(14);
+		params.push_back(' ');
+
+		std::ostringstream stream;
+		stream << channel.getUserLimit();
+		params.append(stream.str());
 	}
 
+	str.append(params);
+	str.append("\r\n");
 
+	if (str.size() >= 512)
+		str.resize(512);
+
+	return str;
 }
 
 // Error

@@ -63,7 +63,7 @@ std::string buildResponseMyInfo(const Client& target);
 
 // Info
 std::string buildResponseWhoisuser(const char* targetNick, const Client& user);
-std::string buildChannelModeIs(const char* targetNick, const Channel* channel);
+std::string buildResponseChannelModeIs(Client& target, const Channel& channel);
 
 // Error
 std::string buildResponseNoPrivileges(const char* targetNick);

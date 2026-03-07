@@ -132,6 +132,10 @@ const std::string& Channel::getKey() const {
 	return _key;
 }
 
+size_t Channel::getUserLimit() const {
+	return _userLimit;
+}
+
 void Channel::setUserLimit(size_t limit)
 {
     _userLimit = limit;
