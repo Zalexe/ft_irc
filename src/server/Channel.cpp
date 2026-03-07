@@ -113,6 +113,10 @@ bool Channel::isInvited(Client* client) const
 const std::set<Client*>& Channel::getInvites() const {
 	return _invited;
 }
+void Channel::removeInvite(Client* client)
+{
+    _invited.erase(client);
+}
 
 void Channel::setInviteOnly(bool value)
 {

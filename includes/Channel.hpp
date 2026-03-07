@@ -50,6 +50,7 @@ public:
     void invite(Client*);
     bool isInvited(Client*) const;
 	const std::set<Client*>& getInvites() const;
+    void removeInvite(Client* client);
 
     // Mode handling
     void setInviteOnly(bool);
