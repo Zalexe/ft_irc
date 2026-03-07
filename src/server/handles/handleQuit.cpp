@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <Messages.hpp>
 
 void Server::handleQuit(Client* client, const std::string& reason)
 {

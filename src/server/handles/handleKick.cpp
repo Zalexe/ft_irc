@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <Messages.hpp>
 
 void Server::handleKick(Client* client, std::stringstream& params)
 {
@@ -14,7 +15,7 @@ void Server::handleKick(Client* client, std::stringstream& params)
     Channel* ch = getChannelByName(channelName);
     if (!ch)
     {
-        std::string msg = buildMessage(1, SERVER_NAME, NO_SUCH_CHANNEL, client->getNick().c_str(), channelName.c_str(), "No such channel");
+        std::string msg = buildResponseCodeMessage(3, SERVER_NAME, NO_SUCH_CHANNEL, client->getNick().c_str(), channelName.c_str(), "No such channel");
         send(client->getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
@@ -22,17 +23,17 @@ void Server::handleKick(Client* client, std::stringstream& params)
     Client* target = getClientByName(targetNick);
     if (!target || !ch->isMember(target))
     {
-        std::string msg = buildMessage(1, SERVER_NAME, ERR_USERNOTINCHANNEL, client->getNick().c_str(), targetNick.c_str(), channelName.c_str(), "They aren't on that channel");
+        std::string msg = buildResponseCodeMessage(4, SERVER_NAME, ERR_USERNOTINCHANNEL, client->getNick().c_str(), targetNick.c_str(), channelName.c_str(), "They aren't on that channel");
         send(client->getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
     if (!ch->isOperator(client))
     {
-        std::string msg = buildMessage(1, SERVER_NAME, "482", client->getNick().c_str(), channelName.c_str(), "You're not channel operator");
+        std::string msg = buildResponseCodeMessage(3, SERVER_NAME, ERR_CHANOPRIVSNEEDED, client->getNick().c_str(), channelName.c_str(), "You're not channel operator");
         send(client->getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
-    std::string kickMsg = buildMessage(1, client->getNick().c_str(), "KICK", channelName.c_str(), targetNick.c_str(), reason.c_str());
+    std::string kickMsg = buildMessage(3, client->getNick().c_str(), "KICK", channelName.c_str(), targetNick.c_str(), reason.c_str());
     ch->broadcast(kickMsg);
     bool empty = ch->removeMember(target);
     if (empty)

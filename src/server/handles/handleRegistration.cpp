@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <Messages.hpp>
 
 /*
 ** --------------------------------- HANDLE PASS ----------------------------------

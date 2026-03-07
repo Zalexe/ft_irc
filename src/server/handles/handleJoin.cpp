@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <Messages.hpp>
 
 void Server::handleJoin(Client* client, std::stringstream& params)
 {
@@ -40,8 +41,8 @@ void Server::handleJoin(Client* client, std::stringstream& params)
         {
             if (ch->isInviteOnly() && !ch->isInvited(client))
             {
-                std::string msg = buildMessage(
-                    1, 
+                std::string msg = buildResponseCodeMessage(
+                    3, 
                     SERVER_NAME,
                     ERR_INVITEONLYCHAN,
                     client->getNick().c_str(),
@@ -53,8 +54,8 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             }
             if (ch->hasKey() && ch->checkKey(key) == false)
             {
-                std::string msg = buildMessage(
-                    1,
+                std::string msg = buildResponseCodeMessage(
+                    3,
                     SERVER_NAME,
                     ERR_BADCHANNELKEY,
                     client->getNick().c_str(),
@@ -66,8 +67,8 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             }
             if (ch->isFull())
             {
-                std::string msg = buildMessage(
-                    1,
+                std::string msg = buildResponseCodeMessage(
+                    3,
                     SERVER_NAME,
                     ERR_CHANNELISFULL,
                     client->getNick().c_str(),

@@ -2,6 +2,7 @@
 #include "Server.hpp"
 #include <cstddef>
 #include <ctime>
+#include <Messages.hpp>
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
