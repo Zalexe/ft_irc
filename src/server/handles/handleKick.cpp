@@ -1,5 +1,5 @@
-#include "Client.hpp"
+#include "Server.hpp"
 
-void handleKick(Client* client, const std::string& line) {
+void Server::handleKick(Client* client, std::stringstream& line) {
 
 }

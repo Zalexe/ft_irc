@@ -1,5 +1,5 @@
-#include "Client.hpp"
+#include "Server.hpp"
 
-void handlePrivmsg(Client* client, const std::string& line) {
+void Server::handlePrivmsg(Client* client, std::stringstream& line) {
 	
 }

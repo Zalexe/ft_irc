@@ -37,18 +37,15 @@ static inline bool handleSetOperator(Channel &channel, bool value, std::stringst
 		return false;
 	}
 
-	value ? channel.addOperator(target) : channel.removeOperator(target);
+	value ? channel.addOperator(target) : channel.removeOperator(target); // Add/Remove operator status
 
 	return true;
 }
 
-void Server::handleMode(Client* client, const std::string& line) {
-	std::stringstream linestream(line);
-	std::string dummy;
+void Server::handleMode(Client* client, std::stringstream& line) {
 	std::string target;
-	dummy.reserve(4);
 
-	linestream >> dummy >> target;
+	line >> target;
 	if (target.length() == 0) {
 		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
 		return;
@@ -69,7 +66,7 @@ void Server::handleMode(Client* client, const std::string& line) {
 	}
 
 	std::string modes;
-	linestream >> modes;
+	line >> modes;
 	if (modes.length() < 2) {
 		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
 		return;
@@ -96,8 +93,8 @@ void Server::handleMode(Client* client, const std::string& line) {
 		switch (*m) {
 			case 'i': ch->setInviteOnly(value); break;
 			case 't': ch->setTopicRestricted(value); break;
-			case 'k': valid = handleSetPass(*ch, value, linestream, message, *client); break;
-			case 'o': ch->setInviteOnly(value); break;
+			case 'k': valid = handleSetPass(*ch, value, line, message, *client); break;
+			case 'o': valid = handleSetOperator(*ch, value, line, message, *client, *this); break;
 			case 'l': ch->setInviteOnly(value); break;
 			default: {
 				sendError(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
@@ -106,6 +103,4 @@ void Server::handleMode(Client* client, const std::string& line) {
 		}
 		m++;
 	}
-	
-	linestream >> dummy >> target;
 }

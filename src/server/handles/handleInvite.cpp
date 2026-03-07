@@ -1,3 +1,3 @@
-#include "Client.hpp"
+#include "Server.hpp"
 
-void handleInvite(Client* client, const std::string& line);
+void Server::handleInvite(Client* client, std::stringstream& line) {}

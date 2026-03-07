@@ -1,7 +1,5 @@
 #include "Server.hpp"
 
-
-
 void Server::handleQuit(Client& client, const std::string& reason)
 {
     std::string quitMsg = ":" + client.getPrefix() +

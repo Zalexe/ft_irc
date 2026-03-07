@@ -1,3 +1,5 @@
-#include "Client.hpp"
+#include "Server.hpp"
 
-void handleTopic(Client* client, const std::string& line);
+void Server::handleTopic(Client* client, std::stringstream& line) {
+
+}

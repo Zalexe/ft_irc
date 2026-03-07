@@ -39,6 +39,16 @@ class Server{
         std::string _pass, _serverPrefix, _message;
 	    int _serverSocket, _epollSocket, _port;
 		const std::time_t _creationDate;
+
+		// Handler helpers
+        void handleRegistration(Client* client, const std::string& command, const std::string& line);
+        void handleJoin(Client* client, std::stringstream stream);
+        void handlePrivmsg(Client* client, std::stringstream& line);
+        void handleQuit(int ClientFd, const std::string& reason);
+        void handleKick(Client* client, std::stringstream& line);
+        void handleInvite(Client* client, std::stringstream& line);
+        void handleTopic(Client* client, std::stringstream& line);
+        void handleMode(Client* client, std::stringstream& line);
     public:
         Server();
         Server(int Port, std::string Pass);
@@ -66,30 +76,6 @@ class Server{
         bool nickExists(const std::string& nick, Client* requester);
         void handleNick(Client* client, const std::string& line);
         void handleUser(Client* client, const std::string& line);
-        //handle registration
-        void handleRegistration(Client* client, const std::string& command, const std::string& line);
-
-
-        //handle Join
-        void handleJoin(Client* client, const std::string& line);
-
-        //handle Private message
-        void handlePrivmsg(Client* client, const std::string& line);
-
-        //handle Quit
-        void handleQuit(int ClientFd);
-
-        //handle kick
-        void handleKick(Client* client, const std::string& line);
-
-        //handle Invite
-        void handleInvite(Client* client, const std::string& line);
-
-        //handle Topic
-        void handleTopic(Client* client, const std::string& line);
-
-        //handle Mode
-        void handleMode(Client* client, const std::string& line);
 
         //send error
         void sendError(Client* client, const std::string& msg);
