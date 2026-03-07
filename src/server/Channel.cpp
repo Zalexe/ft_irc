@@ -109,6 +109,11 @@ bool Channel::isInvited(Client* client) const
 {
     return _invited.find(client) != _invited.end();
 }
+
+const std::set<Client*>& Channel::getInvites() const {
+	return _invited;
+}
+
 void Channel::setInviteOnly(bool value)
 {
     _inviteOnly = value;

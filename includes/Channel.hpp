@@ -49,6 +49,7 @@ public:
     // Invite system
     void invite(Client*);
     bool isInvited(Client*) const;
+	const std::set<Client*>& getInvites() const;
 
     // Mode handling
     void setInviteOnly(bool);

@@ -101,6 +101,10 @@ std::string buildResponseWhoisuser(const char* targetNick, const Client& user) {
 	return buildResponseCodeMessage(6, WHOISUSER, targetNick, user.nickname.c_str(), user.name.c_str(), inet_ntoa(user.getAddr().sin_addr), "*", finalArg.c_str());
 }
 
+std::string buildResponsesInviteList(const char* targetNick, const Channel& channel) {
+	
+}
+
 std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
 	std::string str(":");
 	str.reserve(100);

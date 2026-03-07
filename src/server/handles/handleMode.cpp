@@ -85,7 +85,8 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	std::string modes;
 	params >> modes;
 	if (modes.length() == 0) {
-		sendError(client, buildResponseChannelModeIs(*client, *ch));
+		sendError(client, buildResponseChannelModeIs(*client, *ch)); // Not really an error, but this method is useful
+		sendError(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
 		return;
 	} else if (modes.length() < 2) {
 		sendError(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
