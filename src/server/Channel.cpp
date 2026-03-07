@@ -35,14 +35,29 @@ void Channel::addMember(Client* client)
         _operators.insert(client);
     client->addChannel(this);
 }
-void Channel::removeMember(Client* client)
+bool Channel::removeMember(Client* client)
 {
     if (!client)
         return;
 
+    // Remove operator status if applicable
+    if(this->isOperator(client))
+        _operators.erase(client);
     _members.erase(client);
-    _operators.erase(client);
     client->removeChannel(this);
+    if (_operators.empty() && !_members.empty())
+    {
+        Client* newOp = *_members.begin();
+        _operators.insert(newOp);
+        std::string opMsg = buildMessage(
+            1,
+            newOp->getNick().c_str(),
+            "MODE",
+            (_name + " +o " + newOp->getNick()).c_str()
+        );
+        broadcast(opMsg);
+    }
+    return _members.empty();
 }
 bool Channel::isMember(Client* client) const
 {
@@ -130,10 +145,6 @@ bool Channel::checkKey(const std::string& key) const
 
 const std::string& Channel::getKey() const {
 	return _key;
-}
-
-size_t Channel::getUserLimit() const {
-	return _userLimit;
 }
 
 void Channel::setUserLimit(size_t limit)

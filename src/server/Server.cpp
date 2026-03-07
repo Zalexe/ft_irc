@@ -196,13 +196,14 @@ void Server::handleClient(int fd)
             return; // nothing to read yet
         else
         {
-            disconnectClient(fd);
+            Client* client = getClientByFd(fd);
+            handleQuit(client, "Client disconnected");
             return;
         }
     } else if (bytes == 0)
     {
-        // client closed connection
-        disconnectClient(fd);
+        Client* client = getClientByFd(fd);
+        handleQuit(client, "Client disconnected");
         return;
     }
 

@@ -6,6 +6,7 @@
 #include <set>
 #include <vector>
 #include "Client.hpp"
+#include "Messages.hpp"
 
 class Channel {
 private:
@@ -34,7 +35,7 @@ public:
 
     // Membership
     void addMember(Client*);
-    void removeMember(Client*);
+    bool removeMember(Client*);
     bool isMember(Client*) const;
     const std::set<Client*>& getMembers() const;
 
@@ -61,8 +62,7 @@ public:
     bool checkKey(const std::string& key) const;
     bool hasKey() const;
     const std::string& getKey() const;
-   
-	size_t getUserLimit() const;
+
     void setUserLimit(size_t limit);
     void removeUserLimit();
     bool isFull() const;

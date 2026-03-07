@@ -1,24 +1,30 @@
 #include "Server.hpp"
 
-
 void Server::handleQuit(Client* client, const std::string& reason)
 {
-    std::string quitReason = reason.empty()
-        ? client->getNick() + " has quit"
-        : reason;
-
-    std::string quitMsg = buildMessage(
-        1,
-        client->getNick().c_str(),
-        "QUIT",
-        quitReason.c_str()
-    );
-
-    for (Channel* ch : client->getChannels())
+    if (!client)
+        return;
+    std::string quitReason = reason.empty() ? client->getNick() + " has quit" : reason;
+    std::string quitMsg = buildMessage(1, client->getNick().c_str(), "QUIT", quitReason.c_str());
+    for (size_t i = 0; i < _channels.size();)
     {
-        ch->broadcast(quitMsg, client);
-        ch->removeMember(client);
-    }
+        Channel* ch = _channels[i];
 
-    disconnectClient(client->getFd());
+        if (ch->isMember(client))
+        {
+            ch->broadcast(quitMsg, client);
+            bool empty = ch->removeMember(client);
+
+            if (empty)
+            {
+                delete ch;
+                _channels.erase(_channels.begin() + i);
+                continue; // do not increment i
+            }
+        }
+        ++i;
+    }
+    client->disconnect(quitReason.c_str());
+    _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
+    delete client;
 }

@@ -77,6 +77,9 @@ class Server{
         void handleNick(Client* client, std::stringstream& line);
         void handleUser(Client* client, std::stringstream& line);
 
+        //handle disconnect help
+        void Server::disconnectClient(int fd, const char* reason = nullptr);
+
         //send error
         void sendError(Client* client, const std::string& msg);
 
