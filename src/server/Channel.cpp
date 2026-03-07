@@ -125,6 +125,11 @@ bool Channel::checkKey(const std::string& key) const
 {
     return _key == key;
 }
+
+const std::string& Channel::getKey() const {
+	return _key;
+}
+
 void Channel::setUserLimit(size_t limit)
 {
     _userLimit = limit;
