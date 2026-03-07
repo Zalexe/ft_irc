@@ -26,7 +26,7 @@ void Server::handlePass(Client* client, std::stringstream& line)
     {
         std::string e = buildResponseCodeMessage(2, INCORRECT_PASS, client->nickname.c_str(), "Password incorrect");
         send(client->getFd(), e.c_str(), e.length(), 0);
-        disconnectClient(client->getFd());
+        handleQuit(client, "Client failed pass");
         return;
     }
 
@@ -129,7 +129,7 @@ void Server::sendWelcome(Client* client)
         }
         else
         {
-            disconnectClient(client->getFd());
+            handleQuit(client, "Client disconnected");
         }
     }
 }
