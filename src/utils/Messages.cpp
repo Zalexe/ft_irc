@@ -129,6 +129,7 @@ std::string buildResponsesInviteList(const char* targetNick, const Channel& chan
 	}
 
 	responses.append(buildResponseEndOfInviteList(targetNick, channel.getName().c_str()));
+	return responses;
 }
 
 std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {

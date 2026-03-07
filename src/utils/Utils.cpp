@@ -1,5 +1,6 @@
 #include "Utils.hpp"
 #include <cerrno>
+#include <cstdlib>
 
 /**
  * Compare a string against a pattern with '*' and '?' wildcards.

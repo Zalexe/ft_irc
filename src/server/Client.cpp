@@ -1,9 +1,6 @@
 #include "Client.hpp"
 #include "Messages.hpp"
 #include "Server.hpp"
-#include "Utils.hpp"
-#include <cstring>
-#include <sys/socket.h>
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------

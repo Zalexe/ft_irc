@@ -1,4 +1,6 @@
 #include "Channel.hpp"
+#include "Client.hpp"
+#include "Messages.hpp"
 
 /*
 ** ------------------------------- STATIC --------------------------------
@@ -38,7 +40,7 @@ void Channel::addMember(Client* client)
 bool Channel::removeMember(Client* client)
 {
     if (!client)
-        return;
+        return _members.empty();
 
     // Remove operator status if applicable
     if(this->isOperator(client))

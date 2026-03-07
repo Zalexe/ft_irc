@@ -16,9 +16,8 @@
 #include <cerrno>
 #include <vector>
 
-#include "Channel.hpp"
-#include "Messages.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 
 #define SERVER_NAME "ft_irc"
 #define SERVER_VERSION "1.0"
@@ -78,7 +77,7 @@ class Server{
         void handleUser(Client* client, std::stringstream& line);
 
         //handle disconnect help
-        void Server::disconnectClient(int fd, const char* reason = nullptr);
+        void disconnectClient(int fd, const char* reason);
 
         //send error
         void sendError(Client* client, const std::string& msg);

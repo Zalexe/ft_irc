@@ -4,9 +4,8 @@
 #include <string>
 #include <sys/types.h>
 #include <set>
-#include <vector>
-#include "Client.hpp"
-#include "Messages.hpp"
+
+class Client;
 
 class Channel {
 private:

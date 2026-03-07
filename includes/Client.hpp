@@ -6,6 +6,11 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <set>
+#include "Utils.hpp"
+#include <cstring>
+#include "Channel.hpp"
+#include <sys/socket.h>
 
 class Client {
 private:
