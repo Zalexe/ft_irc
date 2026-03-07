@@ -14,7 +14,6 @@ void Server::handleQuit(Client* client, const std::string& reason)
         {
             ch->broadcast(quitMsg, client);
             bool empty = ch->removeMember(client);
-
             if (empty)
             {
                 delete ch;
