@@ -128,4 +128,6 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 		}
 		m++;
 	}
+
+	// TODO: Broadcast
 }
