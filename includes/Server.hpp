@@ -41,7 +41,7 @@ class Server{
 		const std::time_t _creationDate;
 
 		// Handler helpers
-        void handleRegistration(Client* client, const std::string& command, const std::string& line);
+        void handleRegistration(Client* client, const std::string& command, std::stringstream& line);
         void handleJoin(Client* client, std::stringstream params);
         void handlePrivmsg(Client* client, std::stringstream& params);
         void handleQuit(int ClientFd, const std::string& reason);
@@ -71,11 +71,11 @@ class Server{
         //handle registration helpers
         void sendWelcome(Client* client);
         void tryRegister(Client* client);
-        void handlePass(Client* client, const std::string& line);
+        void handlePass(Client* client, std::stringstream& line);
         std::string toLower(const std::string& str);
         bool nickExists(const std::string& nick, Client* requester);
-        void handleNick(Client* client, const std::string& line);
-        void handleUser(Client* client, const std::string& line);
+        void handleNick(Client* client, std::stringstream& line);
+        void handleUser(Client* client, std::stringstream& line);
 
         //send error
         void sendError(Client* client, const std::string& msg);

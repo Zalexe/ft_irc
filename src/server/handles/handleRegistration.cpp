@@ -3,7 +3,7 @@
 /*
 ** --------------------------------- HANDLE PASS ----------------------------------
 */
-void Server::handlePass(Client* client, const std::string& line)
+void Server::handlePass(Client* client, std::stringstream& line)
 {
     if (client->isRegistered())
     {
@@ -12,9 +12,8 @@ void Server::handlePass(Client* client, const std::string& line)
         return;
     }
 
-    std::stringstream ss(line);
-    std::string cmd, pass;
-    ss >> cmd >> pass;
+    std::string pass;
+    line >> pass;
 
     if (pass.empty())
     {
@@ -58,11 +57,10 @@ bool Server::nickExists(const std::string& nick, Client* requester)
     return false;
 }
 
-void Server::handleNick(Client* client, const std::string& line)
+void Server::handleNick(Client* client, std::stringstream& line)
 {
-    std::stringstream ss(line);
-    std::string cmd, nick;
-    ss >> cmd >> nick;
+    std::string nick;
+    line >> nick;
 
     if (nick.empty())
     {
@@ -84,7 +82,7 @@ void Server::handleNick(Client* client, const std::string& line)
 /*
 ** --------------------------------- HANDLE USER ----------------------------------
 */
-void Server::handleUser(Client* client, const std::string& line)
+void Server::handleUser(Client* client, std::stringstream& line)
 {
     if (client->isRegistered())
     {
@@ -92,11 +90,9 @@ void Server::handleUser(Client* client, const std::string& line)
         send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
+    std::string username, hostname, servername, realname;
 
-    std::stringstream ss(line);
-    std::string cmd, username, hostname, servername, realname;
-
-    ss >> cmd >> username >> hostname >> servername;
+    line >> username >> hostname >> servername;
 
     if (username.empty() || hostname.empty() || servername.empty())
     {
@@ -104,7 +100,7 @@ void Server::handleUser(Client* client, const std::string& line)
         send(client->getFd(), e.c_str(), e.length(), 0);
         return;
     }
-    std::getline(ss, realname);
+    std::getline(line, realname);
 
     if (realname.empty())
     {
@@ -154,7 +150,7 @@ void Server::tryRegister(Client* client)
 }
 
 
-void Server::handleRegistration(Client* client, const std::string& command, const std::string& line)
+void Server::handleRegistration(Client* client, const std::string& command, std::stringstream& line)
 {
     if (command == "PASS"){
         handlePass(client, line);

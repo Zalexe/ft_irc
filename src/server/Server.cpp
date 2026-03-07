@@ -144,7 +144,7 @@ void Server::processCommand(Client* client, const std::string& line)
 	std::stringstream remain(line);
     std::string command = toUpper(extractCommand(remain));
     if (!client->isRegistered())
-        handleRegistration(client, command, line);
+        handleRegistration(client, command, remain);
     else
         executeCommand(client, command, remain);
 }
