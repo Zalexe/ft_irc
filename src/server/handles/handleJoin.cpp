@@ -10,7 +10,10 @@ void Server::sendNamesList(Client* client, Channel* ch)
         if (ch->isOperator(*it))
             names += "@";
         names += (*it)->getNick();
-        names += " ";
+        std::set<Client*>::const_iterator next = it;
+        ++next;
+        if (next != members.end())
+            names += " ";
     }
     std::stringstream namesReply;
 
