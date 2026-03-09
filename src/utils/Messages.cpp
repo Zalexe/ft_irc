@@ -201,7 +201,7 @@ std::string buildResponseNoPrivileges(const char* targetNick) {
 }
 
 std::string buildResponseChannelOpNeeded(const char* targetNick, const char* channel) {
-	return buildResponseCodeMessage(2, CHANNEL_OP_NEEDED, targetNick, channel, "You're not a channel operator");
+	return buildResponseCodeMessage(3, CHANNEL_OP_NEEDED, targetNick, channel, "You're not a channel operator");
 }
 
 std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel) {

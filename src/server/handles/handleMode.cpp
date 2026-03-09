@@ -6,55 +6,68 @@
 #include "Messages.hpp"
 #include "Server.hpp"
 
-struct ModeData {
-	const char mode;
-	std::string param; // Nullable
-	
-	ModeData(char mode) : mode(mode) {}
-};
-
-static inline bool handleSetPass(Channel& channel, const ModeData& data, bool value, Client* client, const Server& server) {
-	if (!value) {
+static inline bool handleSetPass(Channel& channel, bool value, std::stringstream& params, std::string& response, const Client& client, std::string& changesOut, std::string& paramsOut) {
+	std::string param;
+	params >> param;
+	if (param.length() == 0) {
+		response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
+		return false;
+	} else if (!value) {
+		if (param != channel.getKey())
+			return false;
 		channel.removeKey();
 	} else {
-		if (data.param.length() == 0) {
-			server.sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+		if (channel.hasKey()) {
+			response = buildResponseCodeMessage(2, ERR_KEYSET, channel.getName().c_str(), "Channel already set");
 			return false;
 		}
-
-		channel.setKey(data.param);
+		channel.setKey(param);
 	}
+	changesOut.push_back('k');
+	paramsOut.append(" ").append(param);
 	return true;
 }
 
-static inline bool handleSetOperator(Channel &channel, const ModeData& data, bool value, Client* client, const Server& server) {
-	if (data.param.length() == 0) {
-		server.sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+static inline bool handleSetOperator(Channel &channel, bool value, std::stringstream& params, std::string& response, const Client& client, const Server& server, std::string& changesOut, std::string& paramsOut) {
+	std::string param;
+	params >> param;
+
+	if (param.length() == 0) {
+		response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
 		return false;
 	}
 
-	Client* target = server.getClientByName(data.param);
+	Client* target = server.getClientByName(param);
 	if (!target || !channel.isMember(target)) {
-		server.sendMessage(client, buildResponseUserNotInChannel(client->nickname.c_str(), data.param.c_str(), channel.getName().c_str()));
+		response = buildResponseUserNotInChannel(client.nickname.c_str(), param.c_str(), channel.getName().c_str());
 		return false;
 	}
 
+	if (channel.isOperator(target) != value) {
+		changesOut.push_back('o');
+		paramsOut.append(" ").append(param);
+	}
 	value ? channel.addOperator(target) : channel.removeOperator(target);
-
 	return true;
 }
 
-static inline bool handleSetUserLimit(Channel& channel, const ModeData& data, bool value, Client* client, const Server& server) {
-	if (!value)
+static inline bool handleSetUserLimit(Channel& channel, bool value, std::stringstream& params, std::string& response, const Client& client, std::string& changesOut, std::string& paramsOut) {
+	if (!value) {
+		if (channel.getUserLimit() > 0)
+			changesOut.push_back('l');
 		channel.removeUserLimit();
-	else {
-		size_t limit = atoll(data.param.c_str());
+	} else {
+		std::string param;
+		params >> param;
+		size_t limit = atoll(param.c_str());
 		
 		if (limit < 1) {
-			server.sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
+			response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
 			return false;
 		}
 
+		changesOut.push_back('l');
+		paramsOut.append(" ").append(param);
 		channel.setUserLimit(limit);
 	}
 	return true;
@@ -84,7 +97,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	params >> modes;
 	if (modes.length() == 0) {
 		sendMessage(client, buildResponseChannelModeIs(*client, *ch));
-		if(ch->getInvites().size() > 0)
+		if (!ch->getInvites().empty())
 			sendMessage(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
 		return;
 	} else if (modes.length() < 2) {
@@ -107,67 +120,45 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 		m++;
 
 	bool valid = true;
-	std::vector<ModeData> datas;
-	std::vector<ModeData> mods;
-	datas.reserve(modes.length() - 1);
-	mods.reserve(modes.length() - 1);
+	std::string message;
+	std::string changesOutput;
+	std::string paramsOutput;
 
-	for (size_t i = 0; m[i]; i++) {
-		if (value && (m[i] == 'k' || m[i] == 'l')) {
-			ModeData data(m[i]);
-			params >> data.param;
-
-			datas.push_back(data);
-		} else if (m[i] != 'o') {
-			datas.push_back(ModeData(m[i]));
-		}
-	}
-
-	for (size_t i = 0; i < datas.size(); i++) {
-		if (!valid)
+	while (*m) {
+		if (!valid) {
+			sendMessage(client, message);
 			break;
-		switch (m[i]) {
-			case 'i': ch->setInviteOnly(value); break;
-			case 't': ch->setTopicRestricted(value); break;
-			case 'k': {
-				valid = handleSetPass(*ch, datas[i], value, client, *this);
-				if (valid)
-					mods.push_back(datas[i]);
+		}
+		switch (*m) {
+			case 'i': {
+				if (ch->isInviteOnly() != value)
+					changesOutput.push_back('i');
+				ch->setInviteOnly(value);
 				break;
 			}
-			case 'o': {
-				valid = handleSetOperator(*ch, datas[i], value, client, *this);
-				if (valid)
-					mods.push_back(datas[i]);
+			case 't': {
+				if (ch->isTopicRestricted() != value)
+					changesOutput.push_back('t');
+				ch->setTopicRestricted(value);
 				break;
 			}
-			case 'l': {
-				valid = handleSetUserLimit(*ch, datas[i], value, client, *this);
-				if (valid)
-					mods.push_back(datas[i]);
-				break;
-			}
+			case 'k': valid = handleSetPass(*ch, value, params, message, *client, changesOutput, paramsOutput); break;
+			case 'o': valid = handleSetOperator(*ch, value, params, message, *client, *this, changesOutput, paramsOutput); break;
+			case 'l': valid = handleSetUserLimit(*ch, value, params, message, *client, changesOutput, paramsOutput); break;
 			default: {
 				sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m, ch->getName().c_str()));
-				break;
+				return;
 			}
 		}
+		m++;
 	}
 
-	std::string modesModified;
-	std::string modParams;
-	modesModified.reserve(mods.size());
-	for (size_t i = 0; i < mods.size(); i++) {
-		modesModified.push_back(mods[i].mode);
-		if (value)
-			modParams.append(" ").append(mods[i].param);
-	}
-
+	// Broadcast changes
 	ch->broadcast(buildMessageNoTrail(
 		2,
 		client->toString().c_str(),
 		"MODE",
 		ch->getName().c_str(),
-		((value ? "+" : "-") + modesModified + modParams).c_str())
-	);
+		((value ? "+" : "-") + changesOutput + paramsOutput).c_str()
+	));
 }
