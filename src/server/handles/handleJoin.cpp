@@ -116,6 +116,10 @@ void Server::handleJoin(Client* client, std::stringstream& params)
                 send(client->getFd(), msg.c_str(), msg.size(), 0);
                 continue;
             }
+            if(ch->isMember(client))
+            {
+                continue;
+            }
             ch->addMember(client);
         }
         // Broadcast JOIN to other members
@@ -127,6 +131,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             std::string topicMsg = buildMessage(1, SERVER_NAME, TOPIC, client->getNick().c_str(), chName.c_str(), ch->getTopic().c_str());
             send(client->getFd(), topicMsg.c_str(), topicMsg.size(), 0);
         }
+        //Send names of users in channels
         sendNamesList(client, ch);
         // Send current channel modes
         std::string modeMsg = buildResponseChannelModeIs(*client, *ch);
