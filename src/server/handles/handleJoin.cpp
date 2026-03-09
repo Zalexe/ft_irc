@@ -18,7 +18,7 @@ void Server::sendNamesList(Client* client, Channel* ch)
     std::stringstream namesReply;
 
     namesReply << ":" << SERVER_NAME
-          << " 353 "
+          << " " << RPL_NAMREPLY << " "
           << client->getNick()
           << " = "
           << ch->getName()
@@ -29,7 +29,7 @@ void Server::sendNamesList(Client* client, Channel* ch)
     std::stringstream endNames;
 
     endNames << ":" << SERVER_NAME
-        << " 366 "
+        << " " << RPL_ENDOFNAMES << " "
         << client->getNick()
         << " "
         << ch->getName()
@@ -84,41 +84,41 @@ void Server::handleJoin(Client* client, std::stringstream& params)
         {
             if (ch->isInviteOnly() && !ch->isInvited(client))
             {
-                std::string msg = buildResponseCodeMessage(
-                    3, 
-                    SERVER_NAME,
-                    ERR_INVITEONLYCHAN,
-                    client->getNick().c_str(),
-                    chName.c_str(),
-                    "Cannot join channel (+i)"
-                );
-                send(client->getFd(), msg.c_str(), msg.size(), 0);
+                std::stringstream msg;
+                msg << ":" << SERVER_NAME
+                    << " " << ERR_INVITEONLYCHAN << " "
+                    << client->getNick()
+                    << " "
+                    << ch->getName()
+                    << " :Cannot join channel (+i)"
+                    << "\r\n";
+                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
                 continue;
             }
             if (ch->hasKey() && ch->checkKey(key) == false)
             {
-                std::string msg = buildResponseCodeMessage(
-                    3,
-                    SERVER_NAME,
-                    ERR_BADCHANNELKEY,
-                    client->getNick().c_str(),
-                    chName.c_str(),
-                    "Cannot join channel (+k) - bad key"
-                );
-                send(client->getFd(), msg.c_str(), msg.size(), 0);
+                std::stringstream msg;
+                msg << ":" << SERVER_NAME
+                    << " " << ERR_BADCHANNELKEY << " "
+                    << client->getNick()
+                    << " "
+                    << ch->getName()
+                    << " :Cannot join channel (+k) - bad key"
+                    << "\r\n";
+                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
                 continue;
             }
             if (ch->isFull())
             {
-                std::string msg = buildResponseCodeMessage(
-                    3,
-                    SERVER_NAME,
-                    ERR_CHANNELISFULL,
-                    client->getNick().c_str(),
-                    chName.c_str(),
-                    "Cannot join channel - channel full"
-                );
-                send(client->getFd(), msg.c_str(), msg.size(), 0);
+                std::stringstream msg;
+                msg << ":" << SERVER_NAME
+                    << " " << ERR_INVITEONLYCHAN << " "
+                    << client->getNick()
+                    << " "
+                    << ch->getName()
+                    << " :Cannot join channel - channel full"
+                    << "\r\n";
+                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
                 continue;
             }
             if(ch->isMember(client))
