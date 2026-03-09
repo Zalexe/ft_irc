@@ -260,7 +260,7 @@ Channel* Server::getChannelByName(const std::string& name) const {
 ** --------------------------------- OTHERS ---------------------------------
 */
 
-void Server::sendMessage(Client* client, const std::string& msg) {
+void Server::sendMessage(Client* client, const std::string& msg) const {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
 }
 

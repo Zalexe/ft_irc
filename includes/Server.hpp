@@ -80,7 +80,7 @@ class Server{
         void disconnectClient(int fd, const char* reason);
 
 		// Send message
-        void sendMessage(Client* client, const std::string& msg);
+        void sendMessage(Client* client, const std::string& msg) const;
 
         //accessors
         Client* getClientByFd(int fd) const;

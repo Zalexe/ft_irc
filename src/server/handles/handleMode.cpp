@@ -6,15 +6,19 @@
 #include "Messages.hpp"
 #include "Server.hpp"
 
-static inline bool handleSetPass(Channel& channel, bool value, std::stringstream& params, std::string& response, const Client& client) {
+struct ModeData {
+	const char mode;
+	const std::string param; // Nullable
+	const bool value;
+};
+
+static inline bool handleSetPass(Channel& channel, bool value, const std::string& param, const Client& client, const Server& server) {
 	if (!value) {
 		channel.removeKey();
 	} else {
-		std::string param;
-		params >> param;
-
 		if (param.length() == 0) {
-			response = buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
+			server.send
+			buildResponseNeedMoreParams(client.nickname.c_str(), "MODE");
 			return false;
 		}
 
@@ -23,7 +27,7 @@ static inline bool handleSetPass(Channel& channel, bool value, std::stringstream
 	return true;
 }
 
-static inline bool handleSetOperator(Channel &channel, bool value, std::stringstream& params, std::string& response, const Client& client, const Server& server) {
+static inline bool handleSetOperator(Channel &channel, bool value, const std::string& param, const Client& client, const Server& server) {
 	std::string param;
 	params >> param;
 
