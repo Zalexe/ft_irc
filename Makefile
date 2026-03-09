@@ -12,9 +12,11 @@
 
 NAME = ircserver
 
-SRCS = src/main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp 
+SRCS = main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp src/server/handles/handleInvite.cpp \
+		src/server/handles/handleJoin.cpp src/server/handles/handleKick.cpp src/server/handles/handleMode.cpp src/server/handles/handlePrivmsg.cpp \
+		src/server/handles/handleQuit.cpp src/server/handles/handleTopic.cpp src/utils/Messages.cpp src/utils/Utils.cpp 
 
-INC = includes/.hpp
+INC = includes/
 
 OBJS = ${SRCS:.cpp=.o}
 
@@ -29,14 +31,14 @@ RM	= rm -rf
 			
 all:			${NAME} 
 
-%.o: %.cpp
-			${CPLUS} ${CFLAGS} -c $< -o $@
+%.o: %.cpp 	${INC}
+			${CPLUS} ${CFLAGS} -c $< -o $@ -I$(INC)
 
 ${NAME}:	Makefile ${OBJS}
 			${CPLUS} ${CFLAGS} ${OBJS} -o ${NAME}
 							
 clean:			
-			${RM} ${OBJS}
+			${RM} ${OBJS} ${DEPS}
 
 fclean:			clean
 			${RM} ${NAME}
