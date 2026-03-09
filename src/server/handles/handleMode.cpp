@@ -72,7 +72,6 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 		sendMessage(client, buildResponseNoSuchChannel(client->nickname.c_str(), target.c_str()));
 		return;
 	}
-	target.erase(0);
 
 	Channel* ch = this->getChannelByName(target);
 
@@ -166,7 +165,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 		2,
 		client->toString().c_str(),
 		"MODE",
-		("#" + ch->getName()).c_str(),
+		ch->getName().c_str(),
 		((value ? "+" : "-") + modesModified + modParams).c_str())
 	);
 }
