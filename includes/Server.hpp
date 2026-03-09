@@ -79,6 +79,9 @@ class Server{
         //handle disconnect help
         void disconnectClient(int fd, const char* reason);
 
+        //handle join help
+        void sendNamesList(Client* client, Channel* ch);
+
 		// Send message
         void sendMessage(Client* client, const std::string& msg) const;
 

@@ -1,6 +1,45 @@
 #include "Server.hpp"
 #include <Messages.hpp>
 
+void Server::sendNamesList(Client* client, Channel* ch)
+{
+    std::string names;
+    const std::set<Client*>& members = ch->getMembers();
+
+    for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); ++it)
+    {
+        if (ch->isOperator(*it))
+            names += "@";
+
+        names += (*it)->getNick();
+        names += " ";
+    }
+
+    std::string namesReply = buildResponseCodeMessage(
+        4,
+        SERVER_NAME,
+        RPL_NAMREPLY,
+        client->getNick().c_str(),
+        "=",
+        ch->getName().c_str(),
+        names.c_str()
+    );
+
+    sendMessage(client, namesReply);
+
+    std::string endNames = buildResponseCodeMessage(
+        3,
+        SERVER_NAME,
+        RPL_ENDOFNAMES,
+        client->getNick().c_str(),
+        ch->getName().c_str(),
+        "End of /NAMES list"
+    );
+
+    sendMessage(client, endNames);
+}
+
+
 void Server::handleJoin(Client* client, std::stringstream& params)
 {
     std::string channelsStr, keysStr;
@@ -90,6 +129,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             std::string topicMsg = buildMessage(1, SERVER_NAME, TOPIC, client->getNick().c_str(), chName.c_str(), ch->getTopic().c_str());
             send(client->getFd(), topicMsg.c_str(), topicMsg.size(), 0);
         }
+        sendNamesList(client, ch);
         // Send current channel modes
         std::string modeMsg = buildResponseChannelModeIs(*client, *ch);
         send(client->getFd(), modeMsg.c_str(), modeMsg.size(), 0);

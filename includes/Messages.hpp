@@ -33,6 +33,9 @@
 #define WHOISOPERATOR "313"
 #define ENDOFWHOIS "318"
 
+#define RPL_NAMREPLY "353"
+#define RPL_ENDOFNAMES "366"
+
 // Channel info
 #define CHANNEL_MODE_IS "324"
 #define NO_TOPIC "331"
