@@ -82,6 +82,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
         }
         // Broadcast JOIN to other members
         std::string joinMsg = buildMessage(1, client->getNick().c_str(), "JOIN", chName.c_str());
+        send(client->getFd(), joinMsg.c_str(), joinMsg.size(), 0);
         ch->broadcast(joinMsg, client);
         // Send topic if any
         if (!ch->getTopic().empty())
