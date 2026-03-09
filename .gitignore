@@ -1,5 +1,5 @@
 .vscode
 .clangd
-.d
-.o
-ircserver
+*.d
+*.o
+ircserv

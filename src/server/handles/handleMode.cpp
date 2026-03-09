@@ -84,7 +84,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	params >> modes;
 	if (modes.length() == 0) {
 		sendMessage(client, buildResponseChannelModeIs(*client, *ch));
-		if(ch->getInvites().size() <= 0)
+		if(ch->getInvites().size() > 0)
 			sendMessage(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
 		return;
 	} else if (modes.length() < 2) {
@@ -159,7 +159,8 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	modesModified.reserve(mods.size());
 	for (size_t i = 0; i < mods.size(); i++) {
 		modesModified.push_back(mods[i].mode);
-		modParams.append(" ").append(mods[i].param);
+		if (value)
+			modParams.append(" ").append(mods[i].param);
 	}
 
 	ch->broadcast(buildMessageNoTrail(

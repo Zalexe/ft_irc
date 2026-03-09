@@ -6,7 +6,7 @@
 #    By: cmarrued <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/03 16:56:12 by cmarrued          #+#    #+#              #
-#    Updated: 2026/03/07 15:28:16 by intherna         ###   ########.fr        #
+#    Updated: 2026/03/09 18:20:12 by intherna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ DEPS = ${SRCS:.cpp=.d}
 
 CPLUS	= c++
 
-CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic -MMD
+CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic -MMD# -g -fsanitize=address
 
 RM	= rm -rf
 			
