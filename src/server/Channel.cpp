@@ -98,7 +98,10 @@ bool Channel::isFull() const
         return false;
     return _members.size() >= _userLimit;
 }
-
+const std::string& Channel::getName() const
+{
+    return _name;
+}
 void Channel::setTopic(const std::string& topic)
 {
     _topic = topic;
@@ -189,5 +192,11 @@ void Channel::broadcast(const std::string& msg, Client* exclude)
 
         send((*it)->getFd(), data, len, 0);
     }
+}
+
+void Channel::invite(Client* client) {
+    if (!client)
+        return;
+    _invited.insert(client);
 }
 /* ************************************************************************** */

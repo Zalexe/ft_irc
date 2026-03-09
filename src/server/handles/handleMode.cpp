@@ -98,7 +98,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	// Modes parsing
 	const char* m = modes.c_str();
 	if (m[0] != '-' && m[0] != '+') {
-		sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0]));
+		sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), m[0], ch->getName().c_str()));
 		return;
 	}
 	bool value = m[0] == '+';
@@ -148,7 +148,7 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 				break;
 			}
 			default: {
-				sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m));
+				sendMessage(client, buildResponseUnknownChannelMode(client->nickname.c_str(), *m, ch->getName().c_str()));
 				break;
 			}
 		}

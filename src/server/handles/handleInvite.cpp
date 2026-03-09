@@ -33,6 +33,6 @@ void Server::handleInvite(Client* client, std::stringstream& params) {
 	}
 
 	ch->invite(target);
-	sendMessage(client, buildResponseInviting(client->nickname.c_str(), ch->getName().c_str(), target->nickname.c_str()));
-	sendMessage(target, buildResponseInviting(client->nickname.c_str(), ch->getName().c_str(), target->nickname.c_str()));
+	sendMessage(client, buildResponseInviting(client->nickname.c_str(), target->nickname.c_str(), ch->getName().c_str()));
+	sendMessage(target, buildResponseInviting(client->nickname.c_str(), target->nickname.c_str(), ch->getName().c_str()));
 }

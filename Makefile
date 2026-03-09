@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ircserver
+NAME = ircserv
 
 SRCS = main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp src/server/handles/handleInvite.cpp \
 		src/server/handles/handleJoin.cpp src/server/handles/handleKick.cpp src/server/handles/handleMode.cpp src/server/handles/handlePrivmsg.cpp \
