@@ -12,8 +12,17 @@ void Server::sendNamesList(Client* client, Channel* ch)
         names += (*it)->getNick();
         names += " ";
     }
-    std::string namesReply = buildResponseCodeMessage(4,SERVER_NAME,RPL_NAMREPLY,client->getNick().c_str(),"=",ch->getName().c_str(),names.c_str());
-    sendMessage(client, namesReply);
+    std::stringstream namesReply;
+
+    namesReply << ":" << SERVER_NAME
+          << " 353 "
+          << client->getNick()
+          << " = "
+          << ch->getName()
+          << " :" 
+          << names
+          << "\r\n";
+    sendMessage(client, namesReply.str());
     std::string endNames = buildResponseCodeMessage(3,SERVER_NAME,RPL_ENDOFNAMES,client->getNick().c_str(),ch->getName().c_str(),"End of /NAMES list");
     sendMessage(client, endNames);
 }
@@ -100,8 +109,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
         }
         // Broadcast JOIN to other members
         std::string joinMsg = buildMessage(1, client->getNick().c_str(), "JOIN", chName.c_str());
-        send(client->getFd(), joinMsg.c_str(), joinMsg.size(), 0);
-        ch->broadcast(joinMsg, client);
+        ch->broadcast(joinMsg);
         // Send topic if any
         if (!ch->getTopic().empty())
         {
