@@ -84,7 +84,8 @@ void Server::handleMode(Client* client, std::stringstream& params) {
 	params >> modes;
 	if (modes.length() == 0) {
 		sendMessage(client, buildResponseChannelModeIs(*client, *ch));
-		sendMessage(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
+		if(ch->getInvites().size() <= 0)
+			sendMessage(client, buildResponsesInviteList(client->nickname.c_str(), *ch));
 		return;
 	} else if (modes.length() < 2) {
 		sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "MODE"));
