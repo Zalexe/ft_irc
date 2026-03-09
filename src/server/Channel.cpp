@@ -51,7 +51,7 @@ bool Channel::removeMember(Client* client)
     {
         Client* newOp = *_members.begin();
         _operators.insert(newOp);
-        std::string opMsg = buildMessage(
+        std::string opMsg = buildMessageNoTrail(
             1,
             newOp->getNick().c_str(),
             "MODE",
