@@ -86,7 +86,7 @@ std::string buildResponseChannelModeIs(Client& target, const Channel& channel);
 std::string buildResponseNoPrivileges(const char* targetNick);
 std::string buildResponseChannelOpNeeded(const char* targetNick, const char* channel);
 std::string buildResponseNoSuchChannel(const char* targetNick, const char* channel);
-std::string buildResponseUnknownChannelMode(const char* targetNick, char mode);
+std::string buildResponseUnknownChannelMode(const char* targetNick, char mode, const char* channel);
 std::string buildResponseNeedMoreParams(const char* targetNick, const char* cmd);
 std::string buildResponseUserNotInChannel(const char* targetNick, const char* nickNotFound, const char* channel);
 std::string buildResponseNoSuchNick(const char* targetNick, const char *nick);
