@@ -192,7 +192,7 @@ std::string buildResponseChannelModeIs(Client& target, const Channel& channel) {
 		params.append(stream.str());
 	}
 
-	return buildResponseCodeMessageNoTrail(4, CHANNEL_MODE_IS, target.nickname.c_str(), ("#" + channel.getName()).c_str(), str.c_str(), params.c_str());
+	return buildResponseCodeMessageNoTrail(4, CHANNEL_MODE_IS, target.nickname.c_str(), channel.getName().c_str(), str.c_str(), params.c_str());
 }
 
 // Error
