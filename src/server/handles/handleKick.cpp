@@ -36,6 +36,7 @@ void Server::handleKick(Client* client, std::stringstream& params)
     std::string kickMsg = buildMessage(3, client->getNick().c_str(), "KICK", channelName.c_str(), targetNick.c_str(), reason.c_str());
     ch->broadcast(kickMsg);
     bool empty = ch->removeMember(target);
+    target->removeChannel(ch);
     if (empty)
     {
         _channels.erase(std::remove(_channels.begin(), _channels.end(), ch), _channels.end());

@@ -5,37 +5,16 @@ void Server::sendNamesList(Client* client, Channel* ch)
 {
     std::string names;
     const std::set<Client*>& members = ch->getMembers();
-
     for (std::set<Client*>::const_iterator it = members.begin(); it != members.end(); ++it)
     {
         if (ch->isOperator(*it))
             names += "@";
-
         names += (*it)->getNick();
         names += " ";
     }
-
-    std::string namesReply = buildResponseCodeMessage(
-        4,
-        SERVER_NAME,
-        RPL_NAMREPLY,
-        client->getNick().c_str(),
-        "=",
-        ch->getName().c_str(),
-        names.c_str()
-    );
-
+    std::string namesReply = buildResponseCodeMessage(4,SERVER_NAME,RPL_NAMREPLY,client->getNick().c_str(),"=",ch->getName().c_str(),names.c_str());
     sendMessage(client, namesReply);
-
-    std::string endNames = buildResponseCodeMessage(
-        3,
-        SERVER_NAME,
-        RPL_ENDOFNAMES,
-        client->getNick().c_str(),
-        ch->getName().c_str(),
-        "End of /NAMES list"
-    );
-
+    std::string endNames = buildResponseCodeMessage(3,SERVER_NAME,RPL_ENDOFNAMES,client->getNick().c_str(),ch->getName().c_str(),"End of /NAMES list");
     sendMessage(client, endNames);
 }
 
