@@ -23,8 +23,16 @@ void Server::sendNamesList(Client* client, Channel* ch)
           << names
           << "\r\n";
     sendMessage(client, namesReply.str());
-    std::string endNames = buildResponseCodeMessage(3,SERVER_NAME,RPL_ENDOFNAMES,client->getNick().c_str(),ch->getName().c_str(),"End of /NAMES list");
-    sendMessage(client, endNames);
+    std::stringstream endNames;
+
+    endNames << ":" << SERVER_NAME
+        << " 366 "
+        << client->getNick()
+        << " "
+        << ch->getName()
+        << " :End of /NAMES list"
+        << "\r\n";
+    sendMessage(client, endNames.str());
 }
 
 
