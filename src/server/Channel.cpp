@@ -1,6 +1,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Messages.hpp"
+#include "Server.hpp"
 
 /*
 ** ------------------------------- STATIC --------------------------------
@@ -182,15 +183,12 @@ void Channel::removeUserLimit()
 */
 void Channel::broadcast(const std::string& msg, Client* exclude)
 {
-    const char* data = msg.c_str();
-    size_t len = msg.size();
-
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); ++it)
     {
         if (*it == exclude)
             continue;
 
-        send((*it)->getFd(), data, len, 0);
+		sendMessage(*it, msg);
     }
 }
 

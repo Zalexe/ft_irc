@@ -1,6 +1,8 @@
 #include "Utils.hpp"
+#include "Client.hpp"
 #include <cerrno>
 #include <cstdlib>
+#include <iostream>
 
 /**
  * Compare a string against a pattern with '*' and '?' wildcards.
@@ -61,4 +63,9 @@ bool validatePassword(const char* str, std::string &password)
         return false;
     password = str;
     return true;
+}
+
+void sendMessage(Client* client, const std::string& msg) {
+	send(client->getFd(), msg.c_str(), msg.length(), 0);
+	std::cout << "Sent to " << client->toString() << " -> {" << msg << '}' << std::endl;
 }

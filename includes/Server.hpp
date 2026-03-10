@@ -82,9 +82,6 @@ class Server{
         //handle join help
         void sendNamesList(Client* client, Channel* ch);
 
-		// Send message
-        void sendMessage(Client* client, const std::string& msg) const;
-
         //accessors
         Client* getClientByFd(int fd) const;
         Client* getClientByName(const std::string& name) const;

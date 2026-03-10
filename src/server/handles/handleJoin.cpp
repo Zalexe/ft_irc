@@ -92,7 +92,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
                     << ch->getName()
                     << " :Cannot join channel (+i)"
                     << "\r\n";
-                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
+				sendMessage(client, msg.str());
                 continue;
             }
             if (ch->hasKey() && ch->checkKey(key) == false)
@@ -105,7 +105,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
                     << ch->getName()
                     << " :Cannot join channel (+k) - bad key"
                     << "\r\n";
-                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
+				sendMessage(client, msg.str());
                 continue;
             }
             if (ch->isFull())
@@ -118,7 +118,8 @@ void Server::handleJoin(Client* client, std::stringstream& params)
                     << ch->getName()
                     << " :Cannot join channel - channel full"
                     << "\r\n";
-                send(client->getFd(), msg.str().c_str(), msg.str().size(), 0);
+				
+				sendMessage(client, msg.str());
                 continue;
             }
             if(ch->isMember(client))
@@ -135,13 +136,13 @@ void Server::handleJoin(Client* client, std::stringstream& params)
         if (!ch->getTopic().empty())
         {
             std::string topicMsg = buildMessage(1, SERVER_NAME, TOPIC, client->getNick().c_str(), chName.c_str(), ch->getTopic().c_str());
-            send(client->getFd(), topicMsg.c_str(), topicMsg.size(), 0);
+			sendMessage(client, topicMsg);
         }
         //Send names of users in channels
         sendNamesList(client, ch);
         //Send current channel modes
         std::string modeMsg = buildResponseChannelModeIs(*client, *ch);
-        send(client->getFd(), modeMsg.c_str(), modeMsg.size(), 0);
+		sendMessage(client, modeMsg);
         //Remove client from invite list if present
         if (ch->isInvited(client))
             ch->removeInvite(client);

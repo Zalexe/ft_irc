@@ -1,6 +1,7 @@
 #include "Client.hpp"
 #include "Messages.hpp"
 #include "Server.hpp"
+#include "Utils.hpp"
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -40,7 +41,7 @@ void Client::disconnect(const char* reason) {
 	if (!this->_alive)
         return;
 	std::string res = buildQuitMessage(SERVER_NAME, nickname.c_str(), reason);
-	send(_fd, res.c_str(), res.size(), 0);
+	sendMessage(this, res);
 	close(_fd);
     _alive = false;
     _fd = -1;

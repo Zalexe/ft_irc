@@ -13,13 +13,13 @@ void Server::handleTopic(Client* client, std::stringstream& params)
     if (!ch)
     {
         std::string msg = buildResponseNoSuchChannel(client->getNick().c_str(), channelName.c_str());
-        send(client->getFd(), msg.c_str(), msg.size(), 0);
+		sendMessage(client, msg);
         return;
     }
     if (!ch->isMember(client))
     {
         std::string msg = buildResponseUserNotInChannel(client->getNick().c_str(), client->getNick().c_str(), channelName.c_str());
-        send(client->getFd(), msg.c_str(), msg.size(), 0);
+		sendMessage(client, msg);
         return;
     }
     std::string topic;
@@ -34,19 +34,19 @@ void Server::handleTopic(Client* client, std::stringstream& params)
         {
             std::string msg = buildResponseCodeMessage(3, SERVER_NAME, TOPIC,client->getNick().c_str(),ch->getName().c_str(),ch->getTopic().c_str()
             );
-            send(client->getFd(), msg.c_str(), msg.size(), 0);
+			sendMessage(client, msg);
         }
         else
         {
             std::string msg = buildResponseCodeMessage(2, SERVER_NAME, NO_TOPIC,client->getNick().c_str(),ch->getName().c_str());
-            send(client->getFd(), msg.c_str(), msg.size(), 0);
+			sendMessage(client, msg);
         }
         return;
     }
     if (ch->isTopicRestricted() && !ch->isOperator(client))
     {
         std::string msg = buildResponseChannelOpNeeded(client->getNick().c_str(), ch->getName().c_str());
-        send(client->getFd(), msg.c_str(), msg.size(), 0);
+		sendMessage(client, msg);
         return;
     }
     ch->setTopic(topic);

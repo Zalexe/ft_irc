@@ -264,13 +264,4 @@ Channel* Server::getChannelByName(const std::string& name) const {
 	return NULL;
 }
 
-/*
-** --------------------------------- OTHERS ---------------------------------
-*/
-
-void Server::sendMessage(Client* client, const std::string& msg) const {
-	send(client->getFd(), msg.c_str(), msg.length(), 0);
-	std::cout << "Sent to " << client->toString() << " -> {" << msg << '}' << std::endl;
-}
-
 /* ************************************************************************** */

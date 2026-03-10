@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "Utils.hpp"
 #include <Messages.hpp>
 
 /*
@@ -8,8 +9,8 @@ void Server::handlePass(Client* client, std::stringstream& line)
 {
     if (client->isRegistered())
     {
-        std::string e = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
+		sendMessage(client, msg);
         return;
     }
 
@@ -18,15 +19,15 @@ void Server::handlePass(Client* client, std::stringstream& line)
 
     if (pass.empty())
     {
-        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+		sendMessage(client, msg);
         return;
     }
 
     if (pass != _pass)
     {
-        std::string e = buildResponseCodeMessage(2, INCORRECT_PASS, client->nickname.c_str(), "Password incorrect");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, INCORRECT_PASS, client->nickname.c_str(), "Password incorrect");
+		sendMessage(client, msg);
         handleQuit(client, "Client failed pass");
         return;
     }
@@ -65,15 +66,15 @@ void Server::handleNick(Client* client, std::stringstream& line)
 
     if (nick.empty())
     {
-        std::string e = buildResponseCodeMessage(1, NO_NICKNAME_GIVEN, "No nickname given");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(1, NO_NICKNAME_GIVEN, "No nickname given");
+		sendMessage(client, msg);
         return;
     }
 
     if (nickExists(nick, client))
     {
-        std::string e = buildResponseCodeMessage(1, NICKNAME_IN_USE, "Nickname in use");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(1, NICKNAME_IN_USE, "Nickname in use");
+		sendMessage(client, msg);
         return;
     }
 
@@ -87,8 +88,8 @@ void Server::handleUser(Client* client, std::stringstream& line)
 {
     if (client->isRegistered())
     {
-        std::string e = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, ALREADY_REG, client->nickname.c_str(), "You may not reregister");
+		sendMessage(client, msg);
         return;
     }
     std::string username, hostname, servername, realname;
@@ -97,16 +98,16 @@ void Server::handleUser(Client* client, std::stringstream& line)
 
     if (username.empty() || hostname.empty() || servername.empty())
     {
-        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+		sendMessage(client, msg);
         return;
     }
     std::getline(line, realname);
 
     if (realname.empty())
     {
-        std::string e = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+		sendMessage(client, msg);
         return;
     }
     if (realname[0] == ' ')
@@ -167,8 +168,8 @@ void Server::handleRegistration(Client* client, const std::string& command, std:
     }
     else
     {
-        std::string e = buildResponseCodeMessage(2, NOT_REGISTERED, client->nickname.c_str(), "Not registered");
-        send(client->getFd(), e.c_str(), e.length(), 0);
+        std::string msg = buildResponseCodeMessage(2, NOT_REGISTERED, client->nickname.c_str(), "Not registered");
+		sendMessage(client, msg);
     }
     tryRegister(client);
 }

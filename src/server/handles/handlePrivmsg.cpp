@@ -25,7 +25,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         if (!ch || !ch->isMember(client))
         {
             std::string msg = buildResponseCodeMessage(3, SERVER_NAME, ERR_CANNOTSENDTOCHAN, client->getNick().c_str(), targetName.c_str(), "Cannot send to channel");
-            send(client->getFd(), msg.c_str(), msg.size(), 0);
+			sendMessage(client, msg);
             return;
         }
         std::string privMsg = buildMessage(2, client->getNick().c_str(), "PRIVMSG", targetName.c_str(), message.c_str());
@@ -37,10 +37,10 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         if (!target)
         {
             std::string msg = buildResponseCodeMessage(3, SERVER_NAME, NO_SUCH_NICKNAME, client->getNick().c_str(), targetName.c_str(), "No such nick");
-            send(client->getFd(), msg.c_str(), msg.size(), 0);
+			sendMessage(client, msg);
             return;
         }
         std::string privMsg = buildMessage(2, client->getNick().c_str(), "PRIVMSG", targetName.c_str(), message.c_str());
-        send(target->getFd(), privMsg.c_str(), privMsg.size(), 0);
+		sendMessage(client, privMsg);
     }
 }
