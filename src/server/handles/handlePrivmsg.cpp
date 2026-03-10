@@ -40,7 +40,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
 			sendMessage(client, msg);
             return;
         }
-        std::string privMsg = buildMessage(2, targetName.c_str(), "PRIVMSG", client->getNick().c_str(), message.c_str());
+        std::string privMsg = buildMessage(2, client->getNick().c_str(), "PRIVMSG", targetName.c_str(), message.c_str());
 		sendMessage(target, privMsg);
     }
 }
