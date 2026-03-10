@@ -15,7 +15,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         message.erase(0, 1); // remove leading space
     if (message.empty() || message[0] != ':')
     {
-        sendMessage(client, buildResponseCodeMessage(3, ERR_NOTEXTTOSEND, client->getNick().c_str(), targetName.c_str(), "Cannot send to channel"));
+        sendMessage(client, buildResponseCodeMessage(3, ERR_NOTEXTTOSEND, client->getNick().c_str(), targetName.c_str(), "No text to send"));
         return;
     }
     message.erase(0, 1);
@@ -40,7 +40,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
 			sendMessage(client, msg);
             return;
         }
-        std::string privMsg = buildMessage(2, client->getNick().c_str(), "PRIVMSG", targetName.c_str(), message.c_str());
-		sendMessage(client, privMsg);
+        std::string privMsg = buildMessage(2, targetName.c_str(), "PRIVMSG", client->getNick().c_str(), message.c_str());
+		sendMessage(target, privMsg);
     }
 }
