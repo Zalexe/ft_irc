@@ -67,5 +67,5 @@ bool validatePassword(const char* str, std::string &password)
 
 void sendMessage(Client* client, const std::string& msg) {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
-	std::cout << "Sent to " << client->toString() << " -> {" << msg << '}' << std::endl;
+	std::cout << "Sent to " << client->toString() << " -> " << msg;
 }

@@ -6,7 +6,7 @@ void Server::handleTopic(Client* client, std::stringstream& params)
     std::string channelName;
     if (!(params >> channelName))
     {
-        sendMessage(client, "No channel specified for TOPIC");
+        sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "TOPIC"));
         return;
     }
     Channel* ch = getChannelByName(channelName);
@@ -32,13 +32,13 @@ void Server::handleTopic(Client* client, std::stringstream& params)
     {
         if (!ch->getTopic().empty())
         {
-            std::string msg = buildResponseCodeMessage(3, SERVER_NAME, TOPIC,client->getNick().c_str(),ch->getName().c_str(),ch->getTopic().c_str()
+            std::string msg = buildResponseCodeMessage(3, TOPIC,client->getNick().c_str(),ch->getName().c_str(),ch->getTopic().c_str()
             );
 			sendMessage(client, msg);
         }
         else
         {
-            std::string msg = buildResponseCodeMessage(2, SERVER_NAME, NO_TOPIC,client->getNick().c_str(),ch->getName().c_str());
+            std::string msg = buildResponseCodeMessage(2, NO_TOPIC,client->getNick().c_str(),ch->getName().c_str());
 			sendMessage(client, msg);
         }
         return;

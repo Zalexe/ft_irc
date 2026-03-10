@@ -6,7 +6,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
     std::string targetName;
     if (!(params >> targetName))
     {
-        sendMessage(client, "No target for PRIVMSG");
+        sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "PRIVMSG"));
         return;
     }
     std::string message;
@@ -15,7 +15,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         message.erase(0, 1); // remove leading space
     if (message.empty() || message[0] != ':')
     {
-        sendMessage(client, "No text to send");
+        sendMessage(client, buildResponseCodeMessage(3, ERR_NOTEXTTOSEND, client->getNick().c_str(), targetName.c_str(), "Cannot send to channel"));
         return;
     }
     message.erase(0, 1);
@@ -24,7 +24,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         Channel* ch = getChannelByName(targetName);
         if (!ch || !ch->isMember(client))
         {
-            std::string msg = buildResponseCodeMessage(3, SERVER_NAME, ERR_CANNOTSENDTOCHAN, client->getNick().c_str(), targetName.c_str(), "Cannot send to channel");
+            std::string msg = buildResponseCodeMessage(3, ERR_CANNOTSENDTOCHAN, client->getNick().c_str(), targetName.c_str(), "Cannot send to channel");
 			sendMessage(client, msg);
             return;
         }
@@ -36,7 +36,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         Client* target = getClientByName(targetName);
         if (!target)
         {
-            std::string msg = buildResponseCodeMessage(3, SERVER_NAME, NO_SUCH_NICKNAME, client->getNick().c_str(), targetName.c_str(), "No such nick");
+            std::string msg = buildResponseCodeMessage(3, NO_SUCH_NICKNAME, client->getNick().c_str(), targetName.c_str(), "No such nick");
 			sendMessage(client, msg);
             return;
         }

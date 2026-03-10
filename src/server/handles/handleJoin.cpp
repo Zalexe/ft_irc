@@ -44,7 +44,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
     std::string channelsStr, keysStr;
     if (!(params >> channelsStr))
     {
-        sendMessage(client, "Need more parameters for JOIN");
+        sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "JOIN"));
         return;
     }
     if(channelsStr[0] != '#')

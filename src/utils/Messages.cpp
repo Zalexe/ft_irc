@@ -155,7 +155,7 @@ std::string buildResponseInviteListSingle(const char* targetNick, const char* ch
 }
 
 std::string buildResponseEndOfInviteList(const char* targetNick, const char* channel) {
-	return buildResponseCodeMessage(2, targetNick, channel, "End of channel invite list");
+	return buildResponseCodeMessage(2, END_OF_INVITE_LIST, targetNick, channel, "End of channel invite list");
 }
 
 std::string buildResponsesInviteList(const char* targetNick, const Channel& channel) {

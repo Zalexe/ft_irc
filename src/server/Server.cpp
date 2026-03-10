@@ -142,38 +142,40 @@ std::string Server::extractCommand(std::stringstream& ss)
 void Server::processCommand(Client* client, const std::string& line)
 {
 	if (line.empty())
-        return;
+		return;
 	std::stringstream remain(line);
-    std::string command = toUpper(extractCommand(remain));
-    if (!client->isRegistered())
-        handleRegistration(client, command, remain);
-    else
-        executeCommand(client, command, remain);
+	std::string command = toUpper(extractCommand(remain));
+	if (!client->isRegistered())
+		handleRegistration(client, command, remain);
+	else
+		executeCommand(client, command, remain);
 }
 
 
 void Server::executeCommand(Client* client,
-                            const std::string& command,
-                            std::stringstream& params)
+							const std::string& command,
+							std::stringstream& params)
 {
-    if (command == "JOIN")
-        handleJoin(client, params);
-    else if (command == "PRIVMSG")
-        handlePrivmsg(client, params);
-    else if (command == "QUIT")
-        handleQuit(client, " has quit");
-    else if (command == "KICK")
-        handleKick(client, params);
-    else if (command == "INVITE")
-        handleInvite(client, params);
-    else if (command == "TOPIC")
-        handleTopic(client, params);
-    else if (command == "MODE")
-        handleMode(client, params);
-    else if (command == "NICK")
-        handleNick(client, params);
-    else
-        sendMessage(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
+	if (command == "JOIN")
+		handleJoin(client, params);
+	else if (command == "PRIVMSG")
+		handlePrivmsg(client, params);
+	else if (command == "QUIT")
+		handleQuit(client, " has quit");
+	else if (command == "KICK")
+		handleKick(client, params);
+	else if (command == "INVITE")
+		handleInvite(client, params);
+	else if (command == "TOPIC")
+		handleTopic(client, params);
+	else if (command == "MODE")
+		handleMode(client, params);
+	else if (command == "NICK")
+		handleNick(client, params);
+	else if (command == "WHO")
+		handleWho(client, params);
+	else
+		sendMessage(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }
 
 
@@ -217,15 +219,10 @@ void Server::handleClient(int fd)
     // Process full lines
     while (client->hasFullLine())
     {
-		clock_t start = clock();
-
         std::string line = client->extractLine();
+		std::cout << "Received from " << client->toString() << " -> {" << line << '}' << std::endl;
+
         processCommand(client, line);
-
-		clock_t end = clock();
-		double time = (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
-
-		std::cout << "Received from " << client->toString() << " -> {" << line << '}' << "Latency: " << time << "ms" << std::endl;
     }
 }
 
