@@ -30,21 +30,43 @@ Execution
 # Example:
 ./ircserv 6667 mysecretpass
 ```
-### Client Connection
-You can connect using any IRC client (e.g., irssi, HexChat, WeeChat) or using nc (netcat) for testing:
+### Connecting with HexChat
 
-nc localhost 6667
+This server is designed to be used with HexChat.
 
-After connecting, the client must send the following commands in order:
+1. Open HexChat
+
+Launch HexChat and open the Network List.
+
+2. Add a new network
+
+Click Add and create a network named:
+
+ft_irc
+3. Configure the server
+
+Click Edit and add a server entry:
+
+localhost/6667
+
+Replace 6667 if you started the server on a different port.
+
+4. Set the server password
+
+In the Server Password field enter the password used when launching the server:
+
+mysecretpass
+5. Connect
+
+Click Connect.
+
+HexChat will automatically send the required IRC registration commands:
 
 PASS <password>
-
 NICK <nickname>
-
 USER <username> 0 * :<realname>
 
-The server will then respond with numeric welcome messages (001–004) indicating successful registration.
-
+If registration is successful, the server will respond with the IRC welcome numeric replies.
 ## Resources
 
 ### References
@@ -62,6 +84,8 @@ AI assistance (ChatGPT) was used to:
 Explain concepts and best practices for epoll and non-blocking sockets
 
 Suggest proper error handling patterns
+
+Write this Readme.md with proper syntax and grammar.
 
 AI was not used to generate the final project code, only as guidance for design, architecture, and clarifying technical questions.
 
