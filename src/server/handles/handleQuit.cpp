@@ -25,6 +25,9 @@ void Server::handleQuit(Client* client, const std::string& reason)
         ++i;
     }
     client->disconnect(quitReason.c_str());
+    int fd = client->getFd();
+    epoll_ctl(_epollSocket, EPOLL_CTL_DEL, fd, NULL);
+    close(fd);
     _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
     delete client;
 }

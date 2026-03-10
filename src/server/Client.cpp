@@ -42,9 +42,7 @@ void Client::disconnect(const char* reason) {
         return;
 	std::string res = buildQuitMessage(SERVER_NAME, nickname.c_str(), reason);
 	sendMessage(this, res);
-	close(_fd);
     _alive = false;
-    _fd = -1;
 }
 
 std::string Client::toString() const {
