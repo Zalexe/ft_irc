@@ -4,7 +4,7 @@
 
 void Server::handleWho(Client* client, std::stringstream& params)
 {
-    std::string channelsStr, keysStr;
+    std::string channelsStr;
     if (!(params >> channelsStr))
     {
         sendMessage(client, buildResponseNeedMoreParams(client->nickname.c_str(), "WHO"));
@@ -15,9 +15,6 @@ void Server::handleWho(Client* client, std::stringstream& params)
         sendMessage(client, buildResponseNoSuchChannel(client->getNick().c_str(), channelsStr.c_str()));
         return;
     }
-    std::getline(params, keysStr);
-    if (!keysStr.empty() && keysStr[0] == ' ')
-        keysStr.erase(0, 1);
     std::stringstream chStream(channelsStr);
     std::string name;
     std::getline(chStream, name, ',');

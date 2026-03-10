@@ -174,6 +174,8 @@ void Server::executeCommand(Client* client,
 		handleNick(client, params);
 	else if (command == "WHO")
 		handleWho(client, params);
+	else if (command == "PART")
+		handlePart(client, params);
 	else
 		sendMessage(client, buildResponseCodeMessage(2, UNKNOWN_ERROR, client->nickname.c_str(), "UNKNOWN COMMAND"));
 }

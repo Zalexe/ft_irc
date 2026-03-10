@@ -42,6 +42,7 @@ class Server{
 		// Handler helpers
         void handleRegistration(Client* client, const std::string& command, std::stringstream& line);
         void handleJoin(Client* client, std::stringstream& params);
+        void handlePart(Client* client, std::stringstream& params);
 		void handleWho(Client* client, std::stringstream& params);
         void handlePrivmsg(Client* client, std::stringstream& params);
         void handleQuit(Client* client, const std::string& reason);

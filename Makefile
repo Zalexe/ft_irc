@@ -6,7 +6,7 @@
 #    By: cmarrued <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/03 16:56:12 by cmarrued          #+#    #+#              #
-#    Updated: 2026/03/10 17:04:08 by intherna         ###   ########.fr        #
+#    Updated: 2026/03/10 18:03:26 by intherna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = ircserv
 SRCS = main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp src/server/handles/handleInvite.cpp \
 		src/server/handles/handleJoin.cpp src/server/handles/handleKick.cpp src/server/handles/handleMode.cpp src/server/handles/handlePrivmsg.cpp \
 		src/server/handles/handleQuit.cpp src/server/handles/handleTopic.cpp src/utils/Messages.cpp src/utils/Utils.cpp \
-		src/server/handles/handleWho.cpp
+		src/server/handles/handleWho.cpp src/server/handles/handlePart.cpp
 
 INC = includes/
 
