@@ -25,7 +25,7 @@ DEPS = ${SRCS:.cpp=.d}
 
 CPLUS	= c++
 
-CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic -MMD# -g -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -std=c++98 --pedantic -MMD -g -fsanitize=address
 
 RM	= rm -rf
 			
