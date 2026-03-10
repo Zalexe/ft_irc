@@ -37,13 +37,7 @@ void Server::handlePass(Client* client, std::stringstream& line)
 /*
 ** --------------------------------- HANDLE NICK ----------------------------------
 */
-std::string Server::toLower(const std::string& str)
-{
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i)
-        result[i] = std::tolower(static_cast<unsigned char>(result[i]));
-    return result;
-}
+
 bool Server::nickExists(const std::string& nick, Client* requester)
 {
     std::string lowerNick = toLower(nick);

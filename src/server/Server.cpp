@@ -256,7 +256,7 @@ Client* Server::getClientByName(const std::string& name) const {
 
 Channel* Server::getChannelByName(const std::string& name) const {
 	for (size_t i = 0; i < this->_channels.size(); i++) {
-		if (this->_channels[i]->getName() == name)
+		if (toLower(this->_channels[i]->getName()) == toLower(name))
 			return this->_channels[i];
 	}
 

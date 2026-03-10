@@ -65,6 +65,23 @@ bool validatePassword(const char* str, std::string &password)
     return true;
 }
 
+std::string toLower(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i)
+        if (result[i] == '[')
+            result[i] = '{';
+        else if (result[i] == ']')
+            result[i]= '}'; 
+        else if (result[i] == '\\')
+            result[i]= '|'; 
+        else if (result[i] == '~')
+            result[i]= '^'; 
+        else
+            result[i] = std::tolower(static_cast<unsigned char>(result[i]));
+    return result;
+}
+
 void sendMessage(Client* client, const std::string& msg) {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
 	std::cout << "Sent to " << client->toString() << " -> " << msg;

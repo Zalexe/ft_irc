@@ -67,19 +67,15 @@ class Server{
 
         //read message and send to appropiate handle
         void handleClient(int fd);
-        void disconnectClient(int fd);
 
         //handle registration helpers
         void sendWelcome(Client* client);
         void tryRegister(Client* client);
         void handlePass(Client* client, std::stringstream& line);
-        std::string toLower(const std::string& str);
         bool nickExists(const std::string& nick, Client* requester);
         void handleNick(Client* client, std::stringstream& line);
         void handleUser(Client* client, std::stringstream& line);
 
-        //handle disconnect help
-        void disconnectClient(int fd, const char* reason);
 
         //handle join help
         void sendNamesList(Client* client, Channel* ch);
