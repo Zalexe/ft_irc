@@ -1,5 +1,6 @@
 
 #include "Server.hpp"
+#include <arpa/inet.h>
 #include <cstddef>
 #include <ctime>
 #include <Messages.hpp>
@@ -216,8 +217,15 @@ void Server::handleClient(int fd)
     // Process full lines
     while (client->hasFullLine())
     {
+		clock_t start = clock();
+
         std::string line = client->extractLine();
         processCommand(client, line);
+
+		clock_t end = clock();
+		double time = (double)(end - start) * 1000.0 / CLOCKS_PER_SEC;
+
+		std::cout << "Received from " << client->toString() << " -> {" << line << '}' << "Latency: " << time << "ms" << std::endl;
     }
 }
 
@@ -262,6 +270,7 @@ Channel* Server::getChannelByName(const std::string& name) const {
 
 void Server::sendMessage(Client* client, const std::string& msg) const {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
+	std::cout << "Sent to " << client->toString() << " -> {" << msg << '}' << std::endl;
 }
 
 /* ************************************************************************** */
