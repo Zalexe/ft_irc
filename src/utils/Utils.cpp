@@ -1,4 +1,5 @@
 #include "Utils.hpp"
+#include "Server.hpp"
 #include "Client.hpp"
 #include <cerrno>
 #include <cstdlib>
@@ -98,4 +99,10 @@ std::string getCurrentTime()
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", t);
 
     return std::string(buffer);
+}
+
+void handleSignal(int signal){
+    (void)signal;
+    server_signal = true;
+    std::cout << "Signal deployed" << std::endl;
 }

@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cerrno>
 #include <vector>
+#include <signal.h>
 
 #include "Bot.hpp"
 #include "Client.hpp"
@@ -23,6 +24,8 @@
 #define SERVER_NAME "ft_irc"
 #define SERVER_VERSION "1.0"
 #define SERVER_DESCRIPTION "IRC Server for 42 by cmarrued & intherna"
+
+extern bool server_signal;
 
 /* TODO:
 * Because of IRC's Scandinavian origin, the characters {}|^ are

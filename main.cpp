@@ -2,6 +2,8 @@
 #include "Server.hpp"
 #include "Utils.hpp"
 
+bool server_signal = false;
+
 int main(int argc, char** argv)
 {
     try
@@ -25,6 +27,7 @@ int main(int argc, char** argv)
         }
         Server server(port, password);
         server.run();
+        
     }
     catch (const std::exception &e)
     {

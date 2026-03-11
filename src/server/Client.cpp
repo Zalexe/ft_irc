@@ -11,7 +11,9 @@ Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(t
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
-Client::~Client() {}
+Client::~Client() {
+	if (_fd >= 0) close(_fd);
+}
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */

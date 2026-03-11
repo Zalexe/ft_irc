@@ -67,13 +67,15 @@ Server::Server(int Port, std::string Pass)
 void Server::run()
 {
     struct epoll_event events[1024];
-
-    while (true)
+    
+    server_signal = false;
+    signal(SIGQUIT, handleSignal);
+    signal(SIGINT, handleSignal);
+    while (server_signal == false)
     {
         int nfds = epoll_wait(_epollSocket, events, 1024, -1);
         if (nfds < 0)
             continue;
-
         for (int i = 0; i < nfds; i++)
         {
             if (events[i].data.fd == _serverSocket)
@@ -193,7 +195,22 @@ void Server::executeCommand(Client* client,
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
-Server::~Server(){}
+Server::~Server(){
+
+
+    for(std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); it++ ){
+        delete *it;
+    }
+    _clients.clear();
+    for(std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ){
+        delete *it;
+    }
+    _channels.clear();
+    if (_serverSocket >= 0)
+        close(_serverSocket);
+    if (_epollSocket >= 0)
+        close(_epollSocket);
+}
 
 /*
 ** -------------------------------- HANDLES -----------------------------------
@@ -213,12 +230,14 @@ void Server::handleClient(int fd)
         {
             Client* client = getClientByFd(fd);
             handleQuit(client, "Client disconnected");
+            delete client;
             return;
         }
     } else if (bytes == 0)
     {
         Client* client = getClientByFd(fd);
         handleQuit(client, "Client disconnected");
+        delete client;
         return;
     }
 

@@ -17,3 +17,4 @@ std::string toLower(const std::string& str);
 void sendMessage(Client* client, const std::string& msg);
 
 std::string getCurrentTime();
+void handleSignal(int signal);
