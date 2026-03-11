@@ -51,7 +51,12 @@ void Server::handlePart(Client* client, std::stringstream& params)
 			else
 				partMsg = buildMessage(1, client->getNick().c_str(), "PART", chName.c_str(), reason.c_str());
 			ch->broadcast(partMsg);
-			ch->removeMember(client);
+            bool empty = ch->removeMember(client);
+            if (empty)
+            {
+                 _channels.erase(std::remove(_channels.begin(), _channels.end(), ch), _channels.end());
+                delete ch;
+            }
 		}
 	}
 }
