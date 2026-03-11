@@ -1,5 +1,6 @@
 
 #include "Server.hpp"
+#include "Bot.hpp"
 #include <arpa/inet.h>
 #include <cstddef>
 #include <ctime>
@@ -8,10 +9,10 @@
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
-Server::Server() : _creationDate(std::time(NULL)) {}
+Server::Server() : _creationDate(std::time(NULL)), bot() {}
 
 Server::Server(int Port, std::string Pass)
-    : _pass(Pass), _port(Port), _creationDate(std::time(NULL))
+    : _pass(Pass), _port(Port), _creationDate(std::time(NULL)), bot()
 {
     struct sockaddr_in address;
     int opt = 1;

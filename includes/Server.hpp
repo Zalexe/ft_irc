@@ -16,6 +16,7 @@
 #include <cerrno>
 #include <vector>
 
+#include "Bot.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 
@@ -38,6 +39,7 @@ class Server{
         std::string _pass, _serverPrefix, _message;
 	    int _serverSocket, _epollSocket, _port;
 		const std::time_t _creationDate;
+		const Bot bot;
 
 		// Handler helpers
         void handleRegistration(Client* client, const std::string& command, std::stringstream& line);

@@ -181,7 +181,7 @@ void Channel::removeUserLimit()
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
-void Channel::broadcast(const std::string& msg, Client* exclude)
+void Channel::broadcast(const std::string& msg, Client* exclude) const
 {
     for (std::set<Client*>::iterator it = _members.begin(); it != _members.end(); ++it)
     {

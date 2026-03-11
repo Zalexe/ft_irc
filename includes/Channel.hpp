@@ -70,5 +70,5 @@ public:
     bool isFull() const;
 
     // Messaging
-    void broadcast(const std::string& msg, Client* exclude = NULL);
+    void broadcast(const std::string& msg, Client* exclude = NULL) const;
 };
