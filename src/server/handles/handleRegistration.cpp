@@ -28,7 +28,7 @@ void Server::handlePass(Client* client, std::stringstream& line)
     {
         std::string msg = buildResponseCodeMessage(2, INCORRECT_PASS, client->nickname.c_str(), "Password incorrect");
 		sendMessage(client, msg);
-        handleQuit(client, "Client failed pass");
+        //handleQuit(client, "Client failed pass");
         return;
     }
 
@@ -152,13 +152,18 @@ void Server::handleRegistration(Client* client, const std::string& command, std:
         handlePass(client, line);
         tryRegister(client);
     }
-    else if (command == "NICK"){
+    else if (command == "NICK" && client->isAuthorized()){
         handleNick(client, line);
         tryRegister(client);
     }
-    else if (command == "USER"){
+    else if (command == "USER" && client->isAuthorized()){
         handleUser(client, line);
         tryRegister(client);
+    }
+    else if(!client->isAuthorized())
+    {
+        std::string msg = buildResponseCodeMessage(2, NOT_REGISTERED, client->nickname.c_str(), "Need password first");
+		sendMessage(client, msg);
     }
     else
     {
