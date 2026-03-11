@@ -112,7 +112,7 @@ void Server::handleJoin(Client* client, std::stringstream& params)
             {
                 std::stringstream msg;
                 msg << ":" << SERVER_NAME
-                    << " " << ERR_INVITEONLYCHAN << " "
+                    << " " << ERR_CHANNELISFULL << " "
                     << client->getNick()
                     << " "
                     << ch->getName()
