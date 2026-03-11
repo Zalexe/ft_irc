@@ -35,6 +35,7 @@ void Server::handlePrivmsg(Client* client, std::stringstream& params)
         }
         std::string privMsg = buildMessage(2, client->getNick().c_str(), "PRIVMSG", ch->getName().c_str(), message.c_str());
         ch->broadcast(privMsg, client);
+		this->bot.onChannelPrivmsg(*ch, message);
     }
     else
     {

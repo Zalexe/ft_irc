@@ -13,7 +13,7 @@ public:
 	Bot(const Bot& other);
 	~Bot();
 
-	void onChannelPrivmsg(const Channel& channel, const std::string msg) const;
+	void onChannelPrivmsg(const Channel& channel, const std::string& msg) const;
 
 	Bot& operator=(const Bot& other);
 };
