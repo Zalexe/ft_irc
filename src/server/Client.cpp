@@ -7,7 +7,7 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 Client::Client() : _fd(-1), _alive(false) {}
-Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true) {}
+Client::Client(int fd, struct sockaddr_in host) : _fd(fd), _host(host), _alive(true), _registered(false) {}
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
