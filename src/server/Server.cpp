@@ -101,22 +101,30 @@ void Server::acceptClient()
     {
         if (errno == EAGAIN || errno == EWOULDBLOCK)
             return;
-        else
-        {
+        else if (errno == EMFILE || errno == ENFILE) {
+            std::cerr << "Too many open files, cannot accept new client" << std::endl;
+            return;
+        } else {
             std::cerr << "accept failed: " << strerror(errno) << std::endl;
             return;
         }
     }
     // Non-blocking
-    fcntl(client_fd, F_SETFL, O_NONBLOCK);
-
+    if (fcntl(client_fd, F_SETFL, O_NONBLOCK) < 0)
+    {
+        std::cerr << "fcntl failed: " << strerror(errno) << std::endl;
+        return;
+    }
     // Add to epoll
     struct epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = client_fd;
 
-    epoll_ctl(_epollSocket, EPOLL_CTL_ADD, client_fd, &ev);
-
+    if (epoll_ctl(_epollSocket, EPOLL_CTL_ADD, client_fd, &ev) < 0) {
+        std::cerr << "epoll_ctl failed: " << strerror(errno) << std::endl;
+        close(client_fd);
+        return;
+    }
     // Create Client object
     Client* newClient = new Client(client_fd, client_addr);
     _clients.push_back(newClient);
