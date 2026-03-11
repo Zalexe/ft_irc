@@ -106,8 +106,19 @@ void Server::handleUser(Client* client, std::stringstream& line)
     }
     if (realname[0] == ' ')
         realname.erase(0, 1);
-    if (!realname.empty() && realname[0] == ':')
-        realname.erase(0, 1);
+    if (!realname.empty() && realname[0] != ':' )
+    {
+        std::string msg = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+		sendMessage(client, msg);
+        return;
+    }
+    realname.erase(0, 1);
+    if (realname.empty())
+    {
+        std::string msg = buildResponseCodeMessage(2, NOT_ENOUGH_PARAM, client->nickname.c_str(), "Not enough parameters");
+		sendMessage(client, msg);
+        return;
+    }
     client->setUser(username);
 }
 
