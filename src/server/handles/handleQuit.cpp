@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <Messages.hpp>
+#include <ostream>
 
 void Server::handleQuit(Client* client, const std::string& reason)
 {
@@ -11,6 +12,8 @@ void Server::handleQuit(Client* client, const std::string& reason)
     {
         Channel* ch = _channels[i];
 
+		if (ch->isInvited(client))
+			ch->removeInvite(client);
         if (ch->isMember(client))
         {
             ch->broadcast(quitMsg, client);
@@ -26,8 +29,6 @@ void Server::handleQuit(Client* client, const std::string& reason)
     }
     client->disconnect(quitReason.c_str());
     int fd = client->getFd();
-    epoll_ctl(_epollSocket, EPOLL_CTL_DEL, fd, NULL);
     close(fd);
     _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
-    delete client;
 }

@@ -222,6 +222,10 @@ void Server::handleClient(int fd)
     // Process full lines
     while (client->hasFullLine())
     {
+		if (!client->isAlive()) {
+			delete client;
+			return;
+		}
         std::string line = client->extractLine();
 		std::cout << "Received from " << client->toString() << " -> {" << line << '}' << std::endl;
 
