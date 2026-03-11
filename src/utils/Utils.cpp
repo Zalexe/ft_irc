@@ -3,6 +3,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <iostream>
+#include <ctime>
 
 /**
  * Compare a string against a pattern with '*' and '?' wildcards.
@@ -85,4 +86,16 @@ std::string toLower(const std::string& str)
 void sendMessage(Client* client, const std::string& msg) {
 	send(client->getFd(), msg.c_str(), msg.length(), 0);
 	std::cout << "Sent to " << client->toString() << " -> " << msg;
+}
+
+
+std::string getCurrentTime()
+{
+    std::time_t now = std::time(NULL);
+    std::tm* t = std::localtime(&now);
+
+    char buffer[64];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", t);
+
+    return std::string(buffer);
 }

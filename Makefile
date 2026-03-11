@@ -15,7 +15,7 @@ NAME = ircserv
 SRCS = main.cpp src/server/Server.cpp src/server/Client.cpp src/server/Channel.cpp src/server/handles/handleRegistration.cpp src/server/handles/handleInvite.cpp \
 		src/server/handles/handleJoin.cpp src/server/handles/handleKick.cpp src/server/handles/handleMode.cpp src/server/handles/handlePrivmsg.cpp \
 		src/server/handles/handleQuit.cpp src/server/handles/handleTopic.cpp src/utils/Messages.cpp src/utils/Utils.cpp \
-		src/server/handles/handleWho.cpp src/server/handles/handlePart.cpp
+		src/server/handles/handleWho.cpp src/server/handles/handlePart.cpp src/server/Bot.cpp
 
 INC = includes/
 
